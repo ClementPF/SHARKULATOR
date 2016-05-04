@@ -44,6 +44,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		29C66F3A1CD9A0130020AA11 /* SHARKULATOR 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "SHARKULATOR 2.xcdatamodel"; sourceTree = "<group>"; };
 		29C828BA1CBDEA060003A0D6 /* SHARKULATOR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SHARKULATOR.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		29C828BD1CBDEA060003A0D6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		29C828C01CBDEA060003A0D6 /* SHARKULATOR.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SHARKULATOR.xcdatamodel; sourceTree = "<group>"; };
@@ -558,9 +559,10 @@
 		29C828BF1CBDEA060003A0D6 /* SHARKULATOR.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				29C66F3A1CD9A0130020AA11 /* SHARKULATOR 2.xcdatamodel */,
 				29C828C01CBDEA060003A0D6 /* SHARKULATOR.xcdatamodel */,
 			);
-			currentVersion = 29C828C01CBDEA060003A0D6 /* SHARKULATOR.xcdatamodel */;
+			currentVersion = 29C66F3A1CD9A0130020AA11 /* SHARKULATOR 2.xcdatamodel */;
 			path = SHARKULATOR.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

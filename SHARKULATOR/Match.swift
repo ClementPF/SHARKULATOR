@@ -14,6 +14,7 @@ class Match : NSManagedObject {
     
     @NSManaged var winner : Player
     @NSManaged var loser : Player
+    @NSManaged var breaker : Player
     @NSManaged var winnerScore : Float
     @NSManaged var loserScore : Float
     @NSManaged var value : Float
@@ -22,6 +23,7 @@ class Match : NSManagedObject {
     func encodeWithCoder(aCoder: NSCoder!) {
         aCoder.encodeObject(winner, forKey:kWinner)
         aCoder.encodeObject(loser, forKey:kLoser)
+        aCoder.encodeObject(loser, forKey:kBreaker)
         aCoder.encodeObject(value, forKey:kValue)
         aCoder.encodeObject(date, forKey:kDate)
         aCoder.encodeObject(loserScore, forKey:kLoserScore)

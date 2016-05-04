@@ -21,6 +21,7 @@ class HallOfFameViewController: UIViewController {
     @IBOutlet weak var longestWinStreak : UILabel!
     @IBOutlet weak var longestLooseStreak : UILabel!
     @IBOutlet weak var totalGames : UILabel!
+    @IBOutlet weak var breakStats: UILabel!
     
     
     override func viewDidLoad() {
@@ -33,6 +34,7 @@ class HallOfFameViewController: UIViewController {
         highestScoreLabel.text = "All time champion " + champion.name + " with " + champion.bestScore.description
         
         displayLonguestWinStreak()
+        displayBreakStats()
         displayLonguestLoseStreak()
         
         totalGames.text = scoresBoard.matchs.count.description
@@ -93,8 +95,24 @@ class HallOfFameViewController: UIViewController {
         }
         
         longestLooseStreak.text = "Longest loosing streak of " + loseStreakGlobal.description + " losses by " + topPlayer.name
+    }
+    
+    func displayBreakStats(){
+        var i = 0
+        var total = 0
+        for match in scoresBoard.matchs{
+            if(match.winner == match.breaker){
+                i += 1
+            }
+            if(match.breaker == match.winner || match.breaker == match.loser){
+                total += 1
+            }
+        }
         
-        
+        let ratio = (Float (i) / Float (total))*100
+        if(total != 0){
+            breakStats.text = "Breaker wins " + round(ratio).description + "% of the games."
+        }
     }
     
     @IBAction func close(sender: AnyObject) {

@@ -14,11 +14,13 @@ class Player : NSManagedObject {
     @NSManaged var name : String
     @NSManaged var score : Float
     @NSManaged var bestScore : Float
+    @NSManaged var isRetired : Bool
     
     func encodeWithCoder(aCoder: NSCoder!) {
         aCoder.encodeObject(name, forKey:kName)
         aCoder.encodeObject(score, forKey:kScore)
         aCoder.encodeObject(bestScore, forKey:kBestScore)
+        aCoder.encodeObject(isRetired, forKey:kIsRetired)
     }
     
     convenience init(Player entity: NSEntityDescription,

@@ -92,12 +92,13 @@ class ScoresBoard {
         sortByELOAscending()
     }
     
-    func addMatch(winner: Player, loser: Player, appDelegate : AppDelegate){
+    func addMatch(winner: Player, loser: Player, breaker: Player, appDelegate : AppDelegate){
         
         let entity =  NSEntityDescription.entityForName("Match", inManagedObjectContext:managedContext)
         let match = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedContext)
         match.setValue(winner, forKey:kWinner)
         match.setValue(loser, forKey:kLoser)
+        match.setValue(breaker, forKey:kBreaker)
         match.setValue(winner.score, forKey:kWinnerScore)
         match.setValue(loser.score, forKey:kLoserScore)
         

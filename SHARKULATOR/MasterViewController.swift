@@ -49,8 +49,9 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         for  pl in self.scoreBoard.players {
             for  pl2 in self.scoreBoard.players {
                 if(pl != pl2){
-                let bool = arc4random_uniform(2) == 0 ? true: false
-                self.scoreBoard.addMatch(bool ? pl : pl2, loser: bool ? pl2 : pl, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
+                    let bool = arc4random_uniform(2) == 0 ? true: false
+                    let bool2 = arc4random_uniform(2) == 0 ? true: false
+                self.scoreBoard.addMatch(bool ? pl : pl2, loser: bool ? pl2 : pl, breaker: bool2 ? pl2 : pl, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
                 }
             }
         }

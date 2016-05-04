@@ -17,6 +17,7 @@ class ViewController: UIViewController,UITextFieldDelegate {
     @IBOutlet weak var winnerLabel: UILabel!
     @IBOutlet weak var loserLabel: UILabel!
     
+    @IBOutlet weak var breakSegmentedControl: UISegmentedControl!
     @IBOutlet weak var calculateButton: UIButton!
     
     override func viewDidLoad() {
@@ -49,6 +50,7 @@ class ViewController: UIViewController,UITextFieldDelegate {
         
         var winner = scoresBoard.playerWithName(winnerName)
         var loser = scoresBoard.playerWithName(loserName)
+        var breaker = breakSegmentedControl.selectedSegmentIndex == 0 ? winner : loser
         
         let winnerScore = winner.score
         let loserScore = loser.score
@@ -56,7 +58,7 @@ class ViewController: UIViewController,UITextFieldDelegate {
         let oldLoserScore = loser.score
         
         
-        scoresBoard.addMatch(winner, loser: loser, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
+        scoresBoard.addMatch(winner, loser: loser, breaker: breaker, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
         
         winnerLabel.text = round(winner.score).description + " (" + round(winner.score - oldWinnerScore).description + ")"
         loserLabel.text = round(loser.score).description + " (" + round(loser.score - oldLoserScore).description + ")"
@@ -90,8 +92,10 @@ class ViewController: UIViewController,UITextFieldDelegate {
             
             if(textField == winnerTextField){
                 winnerLabel.text = round(player.score).description
+                breakSegmentedControl.setTitle(player.name, forSegmentAtIndex: 0)
             }else if(textField == loserTextField){
                 loserLabel.text = round(player.score).description
+                breakSegmentedControl.setTitle(player.name, forSegmentAtIndex: 1)
             }
         }else{
             if(textField == winnerTextField){
