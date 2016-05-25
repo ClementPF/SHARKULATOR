@@ -40,4 +40,12 @@ class Match : NSManagedObject {
         super.awakeFromInsert()
         self.date = NSDate()
     }
+    
+    var formattedDate: String {
+        get {
+            let dateFormatter = NSDateFormatter()
+            dateFormatter.dateFormat = "dd-MM-yyyy"
+            return dateFormatter.stringFromDate(self.date)
+        }
+    }
 }

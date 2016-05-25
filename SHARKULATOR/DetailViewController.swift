@@ -239,8 +239,8 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         switch type {
         case .Insert:
             self.tableMatch.insertSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
-        case .Delete:
-            self.tableMatch.deleteSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
+        case .Delete: break
+            //self.tableMatch.deleteSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
         default:
             return
         }
@@ -250,13 +250,18 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         switch type {
         case .Insert:
             tableMatch.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
-        case .Delete:
-            tableMatch.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
+        case .Delete: break
+            //tableMatch.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
         case .Update:
             self.configureCell(tableMatch.cellForRowAtIndexPath(indexPath!)!, withObject: anObject as! NSManagedObject)
         case .Move:
             tableMatch.moveRowAtIndexPath(indexPath!, toIndexPath: newIndexPath!)
         }
+    }
+    
+    func tableView(tableView: UITableView,
+                            editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
+        return []
     }
     
     func controllerDidChangeContent(controller: NSFetchedResultsController) {

@@ -87,7 +87,7 @@ class ViewController: UIViewController,UITextFieldDelegate {
     
     func textFieldDidEndEditing(textField: UITextField){
         let playerName = textField.text!
-        if(scoresBoard.containsPlayerWithName(playerName)){
+        if(scoresBoard.containsPlayerWithName(playerName) && !scoresBoard.playerWithName(playerName).isRetired){
             let player = scoresBoard.playerWithName(playerName) as! Player
             
             if(textField == winnerTextField){

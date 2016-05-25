@@ -29,20 +29,20 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         //fakeMatchs()
     }
 
-    func createFakeData(){// score on 4/13/16
-        self.scoreBoard.addPlayerWithName("Alex",score: 1119, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
-        self.scoreBoard.addPlayerWithName("Clement",score: 1089, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
-        self.scoreBoard.addPlayerWithName("Sal",score: 1018, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
-        self.scoreBoard.addPlayerWithName("Frank",score: 1008, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
-        self.scoreBoard.addPlayerWithName("Gerrit",score: 1008, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
-        self.scoreBoard.addPlayerWithName("Erik",score: 995, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
-        self.scoreBoard.addPlayerWithName("Jim",score: 982, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
-        self.scoreBoard.addPlayerWithName("Ash",score: 979, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
-        self.scoreBoard.addPlayerWithName("Danny",score: 978, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
-        self.scoreBoard.addPlayerWithName("Basit",score: 969, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
-        self.scoreBoard.addPlayerWithName("Ronak",score: 957, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
-        self.scoreBoard.addPlayerWithName("Amber",score: 949, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
-        self.scoreBoard.addPlayerWithName("Jason",score: 949, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
+    func createFakeData(){
+        self.scoreBoard.addPlayerWithName("Alex",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
+        self.scoreBoard.addPlayerWithName("Clement",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
+        self.scoreBoard.addPlayerWithName("Sal",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
+        self.scoreBoard.addPlayerWithName("Frank",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
+        self.scoreBoard.addPlayerWithName("Gerrit",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
+        self.scoreBoard.addPlayerWithName("Erik",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
+        self.scoreBoard.addPlayerWithName("Jim",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
+        self.scoreBoard.addPlayerWithName("Ash",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
+        self.scoreBoard.addPlayerWithName("Danny",score:1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
+        self.scoreBoard.addPlayerWithName("Basit",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
+        self.scoreBoard.addPlayerWithName("Ronak",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
+        self.scoreBoard.addPlayerWithName("Amber",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
+        self.scoreBoard.addPlayerWithName("Jason",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
     }
     
     func fakeMatchs(){
@@ -244,7 +244,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     {
         switch(section)
         {
-        case 1:return "Retired"
+        case 1:return "sore losers"
             break
         default :return ""
             break
@@ -295,16 +295,9 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
 
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
         self.tableView.endUpdates()
+        self.tableView.reloadData()
     }
 
-    /*
      // Implementing the above methods to update the table view in response to individual changes may have performance implications if a large number of changes are made simultaneously. If this proves to be an issue, you can instead just implement controllerDidChangeContent: which notifies the delegate that all section and object changes have been processed.
-     
-     func controllerDidChangeContent(controller: NSFetchedResultsController) {
-         // In the simplest, most efficient, case, reload the table view.
-         self.tableView.reloadData()
-     }
-     */
-
 }
 
