@@ -82,6 +82,7 @@ class ScoresBoard {
         let person = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedContext)
         person.setValue(name, forKey: kName)
         person.setValue(score, forKey: kScore)
+        person.setValue(false, forKey: kIsRetired)
         do {
             try managedContext.save()
             players.append(person as! Player)

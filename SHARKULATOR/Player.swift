@@ -44,6 +44,7 @@ class Player : NSManagedObject {
         super.awakeFromInsert()
         self.score = kdefaultELO
         self.bestScore = kdefaultELO
+        self.isRetired = false
     }
 
   /*

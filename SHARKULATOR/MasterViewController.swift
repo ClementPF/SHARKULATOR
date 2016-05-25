@@ -116,7 +116,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
         let object = self.fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject
-        self.configureCell(cell, index: indexPath.row, withObject: object)
+        self.configureCell(cell, index: indexPath, withObject: object)
         return cell
     }
 
@@ -128,8 +128,9 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
             let context = self.fetchedResultsController.managedObjectContext
-            context.deleteObject(self.fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject)
-                
+            var playerObject = self.fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject
+            playerObject.setValue(true, forKey: kIsRetired)
+            context.refreshObject(playerObject, mergeChanges: true)
             do {
                 try context.save()
             } catch {
@@ -141,9 +142,55 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         }
     }
     
-    func configureCell(cell: UITableViewCell, index : Int, withObject object: NSManagedObject) {
-        let i = index == 0 ? "\u{265B}" : (index + 1).description
-        cell.textLabel!.text = i + " - " + object.valueForKey(kName)!.description
+    override func tableView(tableView: UITableView,
+                            editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
+        if(indexPath.section == 0){
+            let retire = UITableViewRowAction(style: .Normal, title: "Retire") { action, index in
+                
+                let context = self.fetchedResultsController.managedObjectContext
+                var playerObject = self.fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject
+                playerObject.setValue(true, forKey: kIsRetired)
+                context.refreshObject(playerObject, mergeChanges: true)
+                do {
+                    print("Retire " + playerObject.valueForKey(kName)!.description + "isRetired = " + playerObject.valueForKey(kIsRetired)!.description)
+                    try context.save()
+                } catch {
+                    // Replace this implementation with code to handle the error appropriately.
+                    // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+                    print("Unresolved error \(error)")
+                    abort()
+                }
+            }
+            return [retire]
+        }else{
+            let unretire = UITableViewRowAction(style: .Normal, title: "Unretire") { action, index in
+                
+                let context = self.fetchedResultsController.managedObjectContext
+                var playerObject = self.fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject
+                playerObject.setValue(false, forKey: kIsRetired)
+                context.refreshObject(playerObject, mergeChanges: true)
+                do {
+                     print("Unretire " + playerObject.valueForKey(kName)!.description + "isRetired = " + playerObject.valueForKey(kIsRetired)!.description)
+                    try context.save()
+                } catch {
+                    // Replace this implementation with code to handle the error appropriately.
+                    // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+                    print("Unresolved error \(error)")
+                    abort()
+                }
+            }
+            return [unretire]
+        }
+    }
+    
+    func configureCell(cell: UITableViewCell, index : NSIndexPath, withObject object: NSManagedObject) {
+        if(index.section == 0){
+            let i = index.row == 0 ? "\u{265B}" : (index.row + 1).description
+            cell.textLabel!.text = i + " - " + object.valueForKey(kName)!.description
+        }else{
+            cell.textLabel!.text = object.valueForKey(kName)!.description
+        }
+        
         cell.detailTextLabel!.text = String(format: "%.0f", round(object.valueForKey(kScore)! as! Float))
     }
 
@@ -165,13 +212,14 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         fetchRequest.fetchBatchSize = 20
         
         // Edit the sort key as appropriate.
-        let sortDescriptor = NSSortDescriptor(key: "score", ascending: false)
+        let sectionSort = NSSortDescriptor(key: "isRetired", ascending: true)
+        let innerSectionSort = NSSortDescriptor(key: "score", ascending: false)
         
-        fetchRequest.sortDescriptors = [sortDescriptor]
+        fetchRequest.sortDescriptors = [sectionSort, innerSectionSort] //the first descriptor is for the section grouping, the secong one is for the inner section sort
         
         // Edit the section name key path and cache name if appropriate.
         // nil for section name key path means "no sections".
-        let aFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.managedObjectContext!, sectionNameKeyPath: nil, cacheName: "Master")
+        let aFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.managedObjectContext!, sectionNameKeyPath: "isRetired" , cacheName: "Master")
         aFetchedResultsController.delegate = self
         _fetchedResultsController = aFetchedResultsController
         
@@ -191,7 +239,34 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     func controllerWillChangeContent(controller: NSFetchedResultsController) {
         self.tableView.beginUpdates()
     }
-
+    
+    override func tableView( tableView : UITableView,  titleForHeaderInSection section: Int)->String
+    {
+        switch(section)
+        {
+        case 1:return "Retired"
+            break
+        default :return ""
+            break
+        }
+    }
+    
+    override func tableView(tableView: UITableView,
+                     heightForHeaderInSection section: Int) -> CGFloat{
+        switch(section)
+        {
+        case 1:return 30
+            break
+        default :return CGFloat.min
+            break
+        }
+    }
+    
+    override func tableView(tableView: UITableView,
+                            heightForFooterInSection section: Int) -> CGFloat{
+        return CGFloat.min
+    }
+    
     func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
         switch type {
             case .Insert:
@@ -210,9 +285,11 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
             case .Delete:
                 tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
             case .Update:
-                self.configureCell(tableView.cellForRowAtIndexPath(indexPath!)!, index: indexPath!.row, withObject: anObject as! NSManagedObject)
+                self.configureCell(tableView.cellForRowAtIndexPath(indexPath!)!, index: indexPath! , withObject: anObject as! NSManagedObject)
             case .Move:
-                tableView.moveRowAtIndexPath(indexPath!, toIndexPath: newIndexPath!)
+                tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
+                tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
+                //tableView.moveRowAtIndexPath(indexPath!, toIndexPath: newIndexPath!) //should work but causes problem when the retired section is empty
         }
     }
 
