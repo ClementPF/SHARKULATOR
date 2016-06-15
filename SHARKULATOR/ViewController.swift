@@ -19,6 +19,7 @@ class ViewController: UIViewController,UITextFieldDelegate {
     
     @IBOutlet weak var breakSegmentedControl: UISegmentedControl!
     @IBOutlet weak var calculateButton: UIButton!
+    @IBOutlet weak var scratchSwitch: UISwitch!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,7 +59,7 @@ class ViewController: UIViewController,UITextFieldDelegate {
         let oldLoserScore = loser.score
         
         
-        scoresBoard.addMatch(winner, loser: loser, breaker: breaker, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
+        scoresBoard.addMatch(winner, loser: loser, breaker: breaker, scratch : scratchSwitch.on, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
         
         winnerLabel.text = round(winner.score).description + " (" + round(winner.score - oldWinnerScore).description + ")"
         loserLabel.text = round(loser.score).description + " (" + round(loser.score - oldLoserScore).description + ")"

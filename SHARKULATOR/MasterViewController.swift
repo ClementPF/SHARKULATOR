@@ -25,11 +25,11 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
             let controllers = split.viewControllers
             self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
         }
-        //createFakeData()
+        //fakePlayer()
         //fakeMatchs()
     }
 
-    func createFakeData(){
+    func fakePlayer(){
         self.scoreBoard.addPlayerWithName("Alex",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
         self.scoreBoard.addPlayerWithName("Clement",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
         self.scoreBoard.addPlayerWithName("Sal",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
@@ -51,7 +51,8 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
                 if(pl != pl2){
                     let bool = arc4random_uniform(2) == 0 ? true: false
                     let bool2 = arc4random_uniform(2) == 0 ? true: false
-                self.scoreBoard.addMatch(bool ? pl : pl2, loser: bool ? pl2 : pl, breaker: bool2 ? pl2 : pl, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
+                    let bool3 = arc4random_uniform(20) == 0 ? true: false
+                self.scoreBoard.addMatch(bool ? pl : pl2, loser: bool ? pl2 : pl, breaker: bool2 ? pl2 : pl, scratch: bool3, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
                 }
             }
         }
@@ -105,7 +106,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     // MARK: - Table View
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return self.fetchedResultsController.sections?.count ?? 0
+        return self.fetchedResultsController.sections?.count < 2 ? (self.fetchedResultsController.sections?.count)! : 2
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -287,9 +288,9 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
             case .Update:
                 self.configureCell(tableView.cellForRowAtIndexPath(indexPath!)!, index: indexPath! , withObject: anObject as! NSManagedObject)
             case .Move:
-                tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
-                tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
-                //tableView.moveRowAtIndexPath(indexPath!, toIndexPath: newIndexPath!) //should work but causes problem when the retired section is empty
+                //tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
+                //tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
+                tableView.moveRowAtIndexPath(indexPath!, toIndexPath: newIndexPath!) //should work but causes problem when the retired section is empty
         }
     }
 

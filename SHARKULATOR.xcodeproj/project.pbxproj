@@ -69,6 +69,7 @@
 		29C828FB1CBDFCA20003A0D6 /* ELOCalculator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ELOCalculator.swift; sourceTree = "<group>"; };
 		29C828FD1CBE0ED90003A0D6 /* HallOfFameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HallOfFameViewController.swift; sourceTree = "<group>"; };
 		29C828FF1CBE18A00003A0D6 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		29F50F711D11CF1E00294D48 /* SHARKULATOR 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "SHARKULATOR 4.xcdatamodel"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -455,7 +456,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = SHARKULATOR/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.frequency.SHARKULATOR2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.frequency.SHARKULATOR;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -467,7 +468,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = SHARKULATOR/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.frequency.SHARKULATOR2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.frequency.SHARKULATOR;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -563,11 +564,12 @@
 		29C828BF1CBDEA060003A0D6 /* SHARKULATOR.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				29F50F711D11CF1E00294D48 /* SHARKULATOR 4.xcdatamodel */,
 				290E15321CF4FC5E002BB39A /* SHARKULATOR 3.xcdatamodel */,
 				29C66F3A1CD9A0130020AA11 /* SHARKULATOR 2.xcdatamodel */,
 				29C828C01CBDEA060003A0D6 /* SHARKULATOR.xcdatamodel */,
 			);
-			currentVersion = 290E15321CF4FC5E002BB39A /* SHARKULATOR 3.xcdatamodel */;
+			currentVersion = 29F50F711D11CF1E00294D48 /* SHARKULATOR 4.xcdatamodel */;
 			path = SHARKULATOR.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

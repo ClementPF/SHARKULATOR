@@ -25,6 +25,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
     @IBOutlet weak var ratio: UILabel!
     @IBOutlet weak var worstEnemy: UILabel!
     @IBOutlet weak var bestEnemy: UILabel!
+    @IBOutlet weak var scratchRatio: UILabel!
     
     var playerMatchs : [Match] = []
 
@@ -53,7 +54,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
             
             playerMatchs = scoreBoard.getMatchsForUser(player)
             
-            displayRatio()
+            displayRatios() // win loss ratio and scratch ratio
             displayWorstEnemy()
         }
     }
@@ -65,24 +66,34 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
     }
     
     
-    func displayRatio() {
+    func displayRatios() {
         
         var wins = 0
         var ratioPerc : Float = 0
         
+        var scratchs = 0
+        var scratchsPerc : Float = 0
+        
         for match in playerMatchs{
+            // calculate the win loss ratio
             if(player == match.winner){
                 wins = wins + 1
+            }
+            else if(match.scratched){  // calculate the scratchs ratio
+                scratchs = scratchs + 1
             }
         }
         
         ratioPerc = (Float (wins) / Float (playerMatchs.count))*100
+        scratchsPerc = (Float (scratchs) / Float (playerMatchs.count))*100
         
         if let label = self.ratio {
             label.text = "Winning ratio of : " + String(format: "%.1f", ratioPerc) + "%"
         }
+        if let label = self.scratchRatio {
+            label.text = scratchs > 2 ? String(format: "%d", scratchs) + " scratchs and counting" : String(format: "%d", scratchs) + " scratch"
+        }
     }
-    
     
     func displayWorstEnemy() {
         
@@ -309,7 +320,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         let value = round(match.value).description
         
         opponentName.replaceRange(opponentName.startIndex...opponentName.startIndex, with: String(opponentName[opponentName.startIndex]).capitalizedString)
-        cell.textLabel!.text =  (playerWon ? "Won against " : "Lost against ") + opponentName
+        cell.textLabel!.text =  (playerWon ? "Won " : "Lost " + (match.scratched ? "👌👈" : "")) + " against " + opponentName
         cell.detailTextLabel!.text =  value
     }
     

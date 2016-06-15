@@ -301,7 +301,7 @@ class HallOfFameViewController: UIViewController,  NSFetchedResultsControllerDel
         
         winnerName.replaceRange(winnerName.startIndex...winnerName.startIndex, with: String(winnerName[winnerName.startIndex]).capitalizedString)
         looserName.replaceRange(looserName.startIndex...looserName.startIndex, with: String(looserName[looserName.startIndex]).capitalizedString)
-        cell.textLabel!.text =  winnerName + " won against " + looserName
+        cell.textLabel!.text =  winnerName + " won " + (match.scratched ? "👌👈" : "") + "against " + looserName
         cell.detailTextLabel!.text =  value
     }
     
