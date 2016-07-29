@@ -144,21 +144,18 @@ class HallOfFameViewController: UIViewController,  NSFetchedResultsControllerDel
         
         var winStreakPlayer = 0
         var loseStreakPlayer = 0
-        
         var winStreakLoop = 0
         var loseStreakLoop = 0
         
-        var playerMatchs = scoresBoard.getMatchsForUser(player)
-        
         for match in scoresBoard.matchs{
             if(match.winner == player){
-                winStreakLoop = winStreakLoop + 1
+                winStreakLoop += 1
                 loseStreakLoop = 0
                 if(winStreakPlayer < winStreakLoop){
                     winStreakPlayer = winStreakLoop
                 }
             }else if(match.loser == player){
-                loseStreakLoop = loseStreakLoop + 1
+                loseStreakLoop += 1
                 winStreakLoop = 0
                 if(loseStreakPlayer < loseStreakLoop){
                     loseStreakPlayer = loseStreakLoop
@@ -301,7 +298,7 @@ class HallOfFameViewController: UIViewController,  NSFetchedResultsControllerDel
         
         winnerName.replaceRange(winnerName.startIndex...winnerName.startIndex, with: String(winnerName[winnerName.startIndex]).capitalizedString)
         looserName.replaceRange(looserName.startIndex...looserName.startIndex, with: String(looserName[looserName.startIndex]).capitalizedString)
-        cell.textLabel!.text =  winnerName + " won " + (match.scratched ? "👌👈" : "") + "against " + looserName
+        cell.textLabel!.text =  winnerName + " won " + (match.scratched ? "👉👌" : "") + "against " + looserName
         cell.detailTextLabel!.text =  value
     }
     

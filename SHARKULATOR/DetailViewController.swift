@@ -26,6 +26,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
     @IBOutlet weak var worstEnemy: UILabel!
     @IBOutlet weak var bestEnemy: UILabel!
     @IBOutlet weak var scratchRatio: UILabel!
+    @IBOutlet weak var currentStreak: UILabel!
     
     var playerMatchs : [Match] = []
     var badges : [Badge] = []
@@ -63,11 +64,15 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
             
             displayRatios() // win loss ratio and scratch ratio
             displayWorstEnemy()
+            displayCurrentStreak()
         }
     }
 
     @IBAction func displayTotalGame(sender: UIButton) {
-        let numberOfGames = scoreBoard.getMatchsForUser(player!).count
+        var numberOfGames = 0
+        if(player != nil){
+            numberOfGames = scoreBoard.getMatchsForUser(player!).count
+        }
         sender.setTitle(String(numberOfGames), forState: UIControlState.Normal)
         sender.selected = !sender.selected
     }
@@ -99,6 +104,23 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         }
         if let label = self.scratchRatio {
             label.text = scratchs > 2 ? String(format: "%d", scratchs) + " scratchs and counting" : String(format: "%d", scratchs) + " scratch"
+        }
+    }
+    
+    func displayCurrentStreak(){
+        if(playerMatchs.isEmpty){
+            return;
+        }
+        
+        var i = 1;
+        var isWinningStreak = playerMatchs[0].winner == player
+        while(i < playerMatchs.count && ((playerMatchs[i].winner == player && playerMatchs[i].winner == playerMatchs[i-1].winner)
+        || (playerMatchs[i].loser == player && playerMatchs[i].loser == playerMatchs[i-1].loser))){
+            i += 1
+        }
+        
+        if let label = self.currentStreak {
+            label.text = "Current " + (isWinningStreak ?  "winning" : "losing") + " streak of " + String(format: "%d", i) + ( i < 2 ? " game" : " games")
         }
     }
     
@@ -327,7 +349,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         let value = round(match.value).description
         
         opponentName.replaceRange(opponentName.startIndex...opponentName.startIndex, with: String(opponentName[opponentName.startIndex]).capitalizedString)
-        cell.textLabel!.text =  (playerWon ? "Won " : "Lost " + (match.scratched ? "👌👈" : "")) + " against " + opponentName
+        cell.textLabel!.text =  (playerWon ? "Won " : "Lost ") + (match.scratched ? "👉👌" : "") + " against " + opponentName
         cell.detailTextLabel!.text =  value
     }
     

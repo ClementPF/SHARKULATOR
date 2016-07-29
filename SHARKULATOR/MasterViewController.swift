@@ -185,13 +185,15 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     }
     
     func configureCell(cell: UITableViewCell, index : NSIndexPath, withObject object: NSManagedObject) {
+        var cellTitle = "'";
         if(index.section == 0){
             let i = index.row == 0 ? "\u{265B}" : (index.row + 1).description
-            cell.textLabel!.text = i + " - " + object.valueForKey(kName)!.description
+            cellTitle = i + " - " + object.valueForKey(kName)!.description
         }else{
-            cell.textLabel!.text = object.valueForKey(kName)!.description
+            cellTitle = object.valueForKey(kName)!.description
         }
         
+        cell.textLabel!.text = cellTitle;
         cell.detailTextLabel!.text = String(format: "%.0f", round(object.valueForKey(kScore)! as! Float))
     }
 
