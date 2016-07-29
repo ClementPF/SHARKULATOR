@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate , UITableViewDelegate, UITableViewDataSource {
+class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate , UITableViewDelegate, UITableViewDataSource , UICollectionViewDelegate, UICollectionViewDataSource {
 
     
     var managedObjectContext: NSManagedObjectContext? = nil
@@ -28,6 +28,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
     @IBOutlet weak var scratchRatio: UILabel!
     
     var playerMatchs : [Match] = []
+    var badges : [Badge] = []
 
     var player: Player? {
         didSet {
@@ -53,6 +54,12 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
             }
             
             playerMatchs = scoreBoard.getMatchsForUser(player)
+            badges = [TotalGamesBadge.init(value: Float(playerMatchs.count)),
+                      LongestWinStreak.init(value: 0),
+                      LongestLooseStreak.init(value: 0),
+                      BestShark.init(value: 0),
+                      WorstFish.init(value: 0)]
+            
             
             displayRatios() // win loss ratio and scratch ratio
             displayWorstEnemy()
@@ -138,10 +145,10 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         }
         
         if let label = self.worstEnemy {
-            label.text = "Your Shark is " + worstEnemyName + " with a total of " + String(format: "%.0f", round(mostPointLost as! Float)) + " points " + (mostPointLost < 0 ? "lost" : "won")
+            label.text = "Shark : " + worstEnemyName + " with " + String(format: "%.0f", round(mostPointLost as! Float)) + " points"
         }
         if let label = self.bestEnemy {
-            label.text = "Your Fish is " + bestEnemy + " with a total of " + String(format: "%.0f", round(mostPointWon as! Float)) + " points " + (mostPointWon > 0 ? "won" : "lost")
+            label.text = "Fish : " + bestEnemy + " with " + String(format: "%.0f", round(mostPointWon as! Float)) + " points"
         }
     }
     
@@ -332,5 +339,35 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
      self.tableView.reloadData()
      }
      */
+    
+    
+    // MARK: - Badges CollectionViewController
+    
+    //1
+    func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+        return abs(badges.count/3 + 1)
+    }
+    
+    //2
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return min(badges.count - section * 3,3)
+    }
+    
+    //3
+    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("BadgeCell", forIndexPath: indexPath) as! UICollectionViewCell
+        if(!badges.isEmpty){
+            var badge = badges[indexPath.section * 3 + indexPath.row]
+            var valueLabel = cell.viewWithTag(101) as! UILabel
+            valueLabel.text = String(format: "%.0f", badge.value as! Float)
+            var titleLabel = cell.viewWithTag(102) as! UILabel
+            titleLabel.text = badge.displayName
+            var levelLabel = cell.viewWithTag(103) as! UILabel
+            
+            levelLabel.text = badge.levelNameForValue(badge.value)
+            // Configure the cell
+        }
+        return cell
+    }
 }
 

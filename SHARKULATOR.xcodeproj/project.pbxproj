@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		294367251D4B1C9E0028D8B0 /* Badge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294367241D4B1C9E0028D8B0 /* Badge.swift */; };
 		29C828BE1CBDEA060003A0D6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29C828BD1CBDEA060003A0D6 /* AppDelegate.swift */; };
 		29C828C11CBDEA060003A0D6 /* SHARKULATOR.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 29C828BF1CBDEA060003A0D6 /* SHARKULATOR.xcdatamodeld */; };
 		29C828C31CBDEA060003A0D6 /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29C828C21CBDEA060003A0D6 /* MasterViewController.swift */; };
@@ -23,7 +24,7 @@
 		29C828FA1CBDFC470003A0D6 /* ScoresBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29C828F91CBDFC470003A0D6 /* ScoresBoard.swift */; };
 		29C828FC1CBDFCA20003A0D6 /* ELOCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29C828FB1CBDFCA20003A0D6 /* ELOCalculator.swift */; };
 		29C828FE1CBE0ED90003A0D6 /* HallOfFameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29C828FD1CBE0ED90003A0D6 /* HallOfFameViewController.swift */; };
-		29C829001CBE18A00003A0D6 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29C828FF1CBE18A00003A0D6 /* ViewController.swift */; };
+		29C829001CBE18A00003A0D6 /* NewGameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29C828FF1CBE18A00003A0D6 /* NewGameViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,6 +46,7 @@
 
 /* Begin PBXFileReference section */
 		290E15321CF4FC5E002BB39A /* SHARKULATOR 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "SHARKULATOR 3.xcdatamodel"; sourceTree = "<group>"; };
+		294367241D4B1C9E0028D8B0 /* Badge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Badge.swift; sourceTree = "<group>"; };
 		29C66F3A1CD9A0130020AA11 /* SHARKULATOR 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "SHARKULATOR 2.xcdatamodel"; sourceTree = "<group>"; };
 		29C828BA1CBDEA060003A0D6 /* SHARKULATOR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SHARKULATOR.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		29C828BD1CBDEA060003A0D6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -68,7 +70,7 @@
 		29C828F91CBDFC470003A0D6 /* ScoresBoard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScoresBoard.swift; sourceTree = "<group>"; };
 		29C828FB1CBDFCA20003A0D6 /* ELOCalculator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ELOCalculator.swift; sourceTree = "<group>"; };
 		29C828FD1CBE0ED90003A0D6 /* HallOfFameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HallOfFameViewController.swift; sourceTree = "<group>"; };
-		29C828FF1CBE18A00003A0D6 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		29C828FF1CBE18A00003A0D6 /* NewGameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewGameViewController.swift; sourceTree = "<group>"; };
 		29F50F711D11CF1E00294D48 /* SHARKULATOR 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "SHARKULATOR 4.xcdatamodel"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -97,6 +99,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		294367231D4AFFEA0028D8B0 /* Badges */ = {
+			isa = PBXGroup;
+			children = (
+				294367241D4B1C9E0028D8B0 /* Badge.swift */,
+			);
+			name = Badges;
+			sourceTree = "<group>";
+		};
 		29C828B11CBDEA060003A0D6 = {
 			isa = PBXGroup;
 			children = (
@@ -124,7 +134,7 @@
 				29C828F01CBDF58A0003A0D6 /* dataModel */,
 				29C828BD1CBDEA060003A0D6 /* AppDelegate.swift */,
 				29C828FB1CBDFCA20003A0D6 /* ELOCalculator.swift */,
-				29C828FF1CBE18A00003A0D6 /* ViewController.swift */,
+				29C828FF1CBE18A00003A0D6 /* NewGameViewController.swift */,
 				29C828F91CBDFC470003A0D6 /* ScoresBoard.swift */,
 				29C828C21CBDEA060003A0D6 /* MasterViewController.swift */,
 				29C828FD1CBE0ED90003A0D6 /* HallOfFameViewController.swift */,
@@ -160,6 +170,7 @@
 		29C828F01CBDF58A0003A0D6 /* dataModel */ = {
 			isa = PBXGroup;
 			children = (
+				294367231D4AFFEA0028D8B0 /* Badges */,
 				29C828F11CBDF5BA0003A0D6 /* Match.swift */,
 				29C828F21CBDF5BA0003A0D6 /* Player.swift */,
 			);
@@ -304,11 +315,12 @@
 				29C828BE1CBDEA060003A0D6 /* AppDelegate.swift in Sources */,
 				29C828C31CBDEA060003A0D6 /* MasterViewController.swift in Sources */,
 				29C828F31CBDF5BA0003A0D6 /* Match.swift in Sources */,
-				29C829001CBE18A00003A0D6 /* ViewController.swift in Sources */,
+				29C829001CBE18A00003A0D6 /* NewGameViewController.swift in Sources */,
 				29C828F61CBDF6BB0003A0D6 /* Constants.swift in Sources */,
 				29C828F41CBDF5BA0003A0D6 /* Player.swift in Sources */,
 				29C828FE1CBE0ED90003A0D6 /* HallOfFameViewController.swift in Sources */,
 				29C828C51CBDEA060003A0D6 /* DetailViewController.swift in Sources */,
+				294367251D4B1C9E0028D8B0 /* Badge.swift in Sources */,
 				29C828FA1CBDFC470003A0D6 /* ScoresBoard.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

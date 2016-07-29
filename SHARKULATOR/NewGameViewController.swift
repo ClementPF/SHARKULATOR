@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController,UITextFieldDelegate {
+class NewGameViewController: UIViewController,UITextFieldDelegate {
     
     var scoresBoard : ScoresBoard = ScoresBoard.sharedInstance
     @IBOutlet weak var winnerTextField: UITextField!
