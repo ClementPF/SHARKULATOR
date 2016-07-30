@@ -14,46 +14,111 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     var detailViewController: DetailViewController? = nil
     var managedObjectContext: NSManagedObjectContext? = nil
 
-    var scoreBoard : ScoresBoard = ScoresBoard.sharedInstance
+    var scoresBoard : ScoresBoard = ScoresBoard.sharedInstance
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        scoreBoard.restore(UIApplication.sharedApplication().delegate as! AppDelegate)
+        scoresBoard.restore(UIApplication.sharedApplication().delegate as! AppDelegate)
         // Do any additional setup after loading the view, typically from a nib.
         
         if let split = self.splitViewController {
             let controllers = split.viewControllers
             self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
         }
-        //fakePlayer()
-        //fakeMatchs()
+        fakePlayer()
+        fakeMatchs()
+        createStatsTable()
     }
 
     func fakePlayer(){
-        self.scoreBoard.addPlayerWithName("Alex",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
-        self.scoreBoard.addPlayerWithName("Clement",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
-        self.scoreBoard.addPlayerWithName("Sal",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
-        self.scoreBoard.addPlayerWithName("Frank",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
-        self.scoreBoard.addPlayerWithName("Gerrit",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
-        self.scoreBoard.addPlayerWithName("Erik",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
-        self.scoreBoard.addPlayerWithName("Jim",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
-        self.scoreBoard.addPlayerWithName("Ash",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
-        self.scoreBoard.addPlayerWithName("Danny",score:1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
-        self.scoreBoard.addPlayerWithName("Basit",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
-        self.scoreBoard.addPlayerWithName("Ronak",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
-        self.scoreBoard.addPlayerWithName("Amber",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
-        self.scoreBoard.addPlayerWithName("Jason",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
+        self.scoresBoard.addPlayerWithName("Alex",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
+        self.scoresBoard.addPlayerWithName("Clement",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
+        self.scoresBoard.addPlayerWithName("Sal",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
+        self.scoresBoard.addPlayerWithName("Frank",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
+        self.scoresBoard.addPlayerWithName("Gerrit",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
+        self.scoresBoard.addPlayerWithName("Erik",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
+        self.scoresBoard.addPlayerWithName("Jim",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
+        self.scoresBoard.addPlayerWithName("Ash",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
+        self.scoresBoard.addPlayerWithName("Danny",score:1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
+        self.scoresBoard.addPlayerWithName("Basit",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
+        self.scoresBoard.addPlayerWithName("Ronak",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
+        self.scoresBoard.addPlayerWithName("Amber",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
+        self.scoresBoard.addPlayerWithName("Jason",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
     }
     
     func fakeMatchs(){
-        for  pl in self.scoreBoard.players {
-            for  pl2 in self.scoreBoard.players {
+        for  pl in self.scoresBoard.players {
+            for  pl2 in self.scoresBoard.players {
                 if(pl != pl2){
                     let bool = arc4random_uniform(2) == 0 ? true: false
                     let bool2 = arc4random_uniform(2) == 0 ? true: false
                     let bool3 = arc4random_uniform(20) == 0 ? true: false
-                self.scoreBoard.addMatch(bool ? pl : pl2, loser: bool ? pl2 : pl, breaker: bool2 ? pl2 : pl, scratch: bool3, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
+                self.scoresBoard.addMatch(bool ? pl : pl2, loser: bool ? pl2 : pl, breaker: bool2 ? pl2 : pl, scratch: bool3, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
                 }
+            }
+        }
+    }
+    
+    func createStatsTable(){
+        let appDel: AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        var managedContext = appDel.managedObjectContext
+        let entity =  NSEntityDescription.entityForName("Stats", inManagedObjectContext:managedContext)
+        
+        for  pl in self.scoresBoard.players {
+            var matchs = scoresBoard.getMatchsForUser(pl)
+            
+            var winCount = 0
+            var loseCount = 0
+            var winStreak = 0
+            var loseStreak = 0
+            var longestWinStreak = 0
+            var longestLoseStreak = 0
+            var scratchCount = 0
+            var oppScratchCount = 0
+            
+            for  match in matchs {
+                if(pl == match.winner){
+                    winCount+=1
+                    
+                    winStreak+=1
+                    loseStreak = 0
+                    longestWinStreak = max(winStreak,longestWinStreak)
+                    
+                    if(match.scratched){
+                        scratchCount+=1
+                    }
+                }
+                else{
+                    loseCount+=1
+                    
+                    loseStreak+=1
+                    winStreak = 0
+                    longestLoseStreak = max(loseStreak,longestLoseStreak)
+                    
+                    if(match.scratched){
+                        oppScratchCount+=1
+                    }
+                }
+            }
+            
+            let stats = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedContext)
+            stats.setValue(matchs.count, forKey:kGamesCount)
+            stats.setValue(winCount, forKey:kWinCount)
+            stats.setValue(loseCount, forKey:kLoseCount)
+            stats.setValue(winStreak, forKey:kWinStreak)
+            stats.setValue(loseStreak, forKey:kLoseStreak)
+            stats.setValue(longestWinStreak, forKey:kLongestWinStreak)
+            stats.setValue(longestLoseStreak, forKey:kLongestLoseStreak)
+            stats.setValue(pl.bestScore, forKey:kBestScore)
+            stats.setValue(scratchCount, forKey:kScratchCount)
+            stats.setValue(oppScratchCount, forKey:kOpponentScratchCount)
+            
+            pl.setValue(stats, forKey: kStats)
+            
+            do {
+                try managedContext.save()
+            } catch let error as NSError  {
+                print("Could not save \(error), \(error.userInfo)")
             }
         }
     }
@@ -80,8 +145,8 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
             let textField = alert.textFields![0] as UITextField
             print("Text field: \(textField.text)")
             let name = textField.text
-            if(self.scoreBoard.isPlayerNameValid(name!) && !self.scoreBoard.containsPlayerWithName(name!)){
-                self.scoreBoard.addPlayerWithName(name!, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
+            if(self.scoresBoard.isPlayerNameValid(name!) && !self.scoresBoard.containsPlayerWithName(name!)){
+                self.scoresBoard.addPlayerWithName(name!, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
                 self.tableView.reloadData();
             }
         }))

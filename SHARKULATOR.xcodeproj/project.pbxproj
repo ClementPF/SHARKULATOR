@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		294367251D4B1C9E0028D8B0 /* Badge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294367241D4B1C9E0028D8B0 /* Badge.swift */; };
+		294367291D4C74CC0028D8B0 /* Stats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294367281D4C74CC0028D8B0 /* Stats.swift */; };
 		29C828BE1CBDEA060003A0D6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29C828BD1CBDEA060003A0D6 /* AppDelegate.swift */; };
 		29C828C11CBDEA060003A0D6 /* SHARKULATOR.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 29C828BF1CBDEA060003A0D6 /* SHARKULATOR.xcdatamodeld */; };
 		29C828C31CBDEA060003A0D6 /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29C828C21CBDEA060003A0D6 /* MasterViewController.swift */; };
@@ -47,6 +48,9 @@
 /* Begin PBXFileReference section */
 		290E15321CF4FC5E002BB39A /* SHARKULATOR 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "SHARKULATOR 3.xcdatamodel"; sourceTree = "<group>"; };
 		294367241D4B1C9E0028D8B0 /* Badge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Badge.swift; sourceTree = "<group>"; };
+		294367281D4C74CC0028D8B0 /* Stats.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stats.swift; sourceTree = "<group>"; };
+		2943672A1D4C87470028D8B0 /* SHARKULATOR 5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "SHARKULATOR 5.xcdatamodel"; sourceTree = "<group>"; };
+		2943672B1D4C93D90028D8B0 /* SHARKULATOR 6.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "SHARKULATOR 6.xcdatamodel"; sourceTree = "<group>"; };
 		29C66F3A1CD9A0130020AA11 /* SHARKULATOR 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "SHARKULATOR 2.xcdatamodel"; sourceTree = "<group>"; };
 		29C828BA1CBDEA060003A0D6 /* SHARKULATOR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SHARKULATOR.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		29C828BD1CBDEA060003A0D6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -173,6 +177,7 @@
 				294367231D4AFFEA0028D8B0 /* Badges */,
 				29C828F11CBDF5BA0003A0D6 /* Match.swift */,
 				29C828F21CBDF5BA0003A0D6 /* Player.swift */,
+				294367281D4C74CC0028D8B0 /* Stats.swift */,
 			);
 			name = dataModel;
 			sourceTree = "<group>";
@@ -312,6 +317,7 @@
 				29C828F81CBDF7DD0003A0D6 /* PlayerCell.swift in Sources */,
 				29C828C11CBDEA060003A0D6 /* SHARKULATOR.xcdatamodeld in Sources */,
 				29C828FC1CBDFCA20003A0D6 /* ELOCalculator.swift in Sources */,
+				294367291D4C74CC0028D8B0 /* Stats.swift in Sources */,
 				29C828BE1CBDEA060003A0D6 /* AppDelegate.swift in Sources */,
 				29C828C31CBDEA060003A0D6 /* MasterViewController.swift in Sources */,
 				29C828F31CBDF5BA0003A0D6 /* Match.swift in Sources */,
@@ -576,12 +582,14 @@
 		29C828BF1CBDEA060003A0D6 /* SHARKULATOR.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				2943672B1D4C93D90028D8B0 /* SHARKULATOR 6.xcdatamodel */,
+				2943672A1D4C87470028D8B0 /* SHARKULATOR 5.xcdatamodel */,
 				29F50F711D11CF1E00294D48 /* SHARKULATOR 4.xcdatamodel */,
 				290E15321CF4FC5E002BB39A /* SHARKULATOR 3.xcdatamodel */,
 				29C66F3A1CD9A0130020AA11 /* SHARKULATOR 2.xcdatamodel */,
 				29C828C01CBDEA060003A0D6 /* SHARKULATOR.xcdatamodel */,
 			);
-			currentVersion = 29F50F711D11CF1E00294D48 /* SHARKULATOR 4.xcdatamodel */;
+			currentVersion = 2943672B1D4C93D90028D8B0 /* SHARKULATOR 6.xcdatamodel */;
 			path = SHARKULATOR.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

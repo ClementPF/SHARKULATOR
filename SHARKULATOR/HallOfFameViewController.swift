@@ -147,7 +147,7 @@ class HallOfFameViewController: UIViewController,  NSFetchedResultsControllerDel
         var winStreakLoop = 0
         var loseStreakLoop = 0
         
-        for match in scoresBoard.matchs{
+        for match in scoresBoard.getMatchsForUser(player){
             if(match.winner == player){
                 winStreakLoop += 1
                 loseStreakLoop = 0

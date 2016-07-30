@@ -14,13 +14,14 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
     
     var managedObjectContext: NSManagedObjectContext? = nil
     
-    var scoreBoard : ScoresBoard = ScoresBoard.sharedInstance
+    var scoresBoard : ScoresBoard = ScoresBoard.sharedInstance
     
     @IBOutlet weak var nameLabel : UILabel!
     @IBOutlet weak var scoreLabel : UILabel!
     @IBOutlet weak var positionLabel : UILabel!
     @IBOutlet weak var bestScoreLabel : UILabel!
     @IBOutlet weak var tableMatch : UITableView!
+    @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var totalGames: UIButton!
     @IBOutlet weak var ratio: UILabel!
     @IBOutlet weak var worstEnemy: UILabel!
@@ -48,19 +49,25 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
                 label.text = "Score : " + (player.score).description
             }
             if let label = self.positionLabel {
-                label.text = "Position : " + String(scoreBoard.players.indexOf(player)! + 1)
+                label.text = "Position : " + String(scoresBoard.players.indexOf(player)! + 1)
             }
             if let label = self.bestScoreLabel {
                 label.text = "Best score : " + (player.bestScore).description
             }
             
-            playerMatchs = scoreBoard.getMatchsForUser(player)
-            badges = [TotalGamesBadge.init(value: Float(playerMatchs.count)),
-                      LongestWinStreak.init(value: 0),
-                      LongestLooseStreak.init(value: 0),
+            playerMatchs = scoresBoard.getMatchsForUser(player)
+            let stats = player.valueForKey(kStats)
+            
+            badges = [TotalGamesBadge.init(value: stats!.valueForKey(kGamesCount) as! Float),
+                      LongestWinStreak.init(value: stats!.valueForKey(kLongestWinStreak) as! Float),
+                      LongestLooseStreak.init(value: stats!.valueForKey(kLongestLoseStreak) as! Float),
                       BestShark.init(value: 0),
                       WorstFish.init(value: 0)]
             
+            
+            if let collection = self.collectionView {
+                collection.reloadData()
+            }
             
             displayRatios() // win loss ratio and scratch ratio
             displayWorstEnemy()
@@ -71,7 +78,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
     @IBAction func displayTotalGame(sender: UIButton) {
         var numberOfGames = 0
         if(player != nil){
-            numberOfGames = scoreBoard.getMatchsForUser(player!).count
+            numberOfGames = scoresBoard.getMatchsForUser(player!).count
         }
         sender.setTitle(String(numberOfGames), forState: UIControlState.Normal)
         sender.selected = !sender.selected
@@ -151,6 +158,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         
         var mostPointLost = 0 as! Float
         var mostPointWon = 0 as! Float
+        
         var worstEnemyName = ""
         var bestEnemy = ""
         

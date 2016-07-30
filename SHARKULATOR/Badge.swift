@@ -27,7 +27,7 @@ public class Badge {
     
    public func levelNameForValue(value: Float) -> String{
         var i = 0
-        while(i < levels.count && value > levels[i]){
+        while(i < levels.count-1 && value > levels[i]){
             i+=1
         }
         return levelsNames[i]
@@ -56,9 +56,8 @@ class LongestWinStreak : Badge{
             displayName: "Top win streak",
             imageName: "",
             value: value,
-            levels: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
-            
-            levelsNames: ["1️⃣","2️⃣","3️⃣","4️⃣","5️⃣","6️⃣","7️⃣","8️⃣","9️⃣","🔟","11","12","13","14","15"]
+            levels: [3,5,7,9,11,13],
+            levelsNames: ["🔧","🔨","🔪","🗡","🔫","💣"]
         )
     }
 }
@@ -71,8 +70,8 @@ class LongestLooseStreak : Badge{
             displayName: "Top lose streak",
             imageName: "",
             value: value,
-            levels: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
-            levelsNames: ["1️⃣","2️⃣","3️⃣","4️⃣","5️⃣","6️⃣","7️⃣","8️⃣","9️⃣","🔟","11","12","13","14","15"]
+            levels: [3,5,7,9,11,13],
+            levelsNames: ["🍌","🌽","🍆","🌯","🌶","🍍"]
         )
     }
 }

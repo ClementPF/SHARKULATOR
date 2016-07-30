@@ -15,12 +15,14 @@ class Player : NSManagedObject {
     @NSManaged var score : Float
     @NSManaged var bestScore : Float
     @NSManaged var isRetired : Bool
+    @NSManaged var stats : Stats
     
     func encodeWithCoder(aCoder: NSCoder!) {
         aCoder.encodeObject(name, forKey:kName)
         aCoder.encodeObject(score, forKey:kScore)
         aCoder.encodeObject(bestScore, forKey:kBestScore)
         aCoder.encodeObject(isRetired, forKey:kIsRetired)
+        aCoder.encodeObject(stats, forKey:kStats)
     }
     
     convenience init(Player entity: NSEntityDescription,
@@ -34,8 +36,8 @@ class Player : NSManagedObject {
         super.didChangeValueForKey(key)
         
         if key == kScore {
-            if self.score > self.bestScore {
-                bestScore = score
+            if self.score > self.stats.bestScore {
+                stats.bestScore = score
             }
         }
     }
@@ -43,7 +45,6 @@ class Player : NSManagedObject {
     override func awakeFromInsert() {
         super.awakeFromInsert()
         self.score = kdefaultELO
-        self.bestScore = kdefaultELO
         self.isRetired = false
     }
 
