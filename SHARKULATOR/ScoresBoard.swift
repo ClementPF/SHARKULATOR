@@ -63,26 +63,22 @@ class ScoresBoard {
     
     func addPlayerWithName(name: String, appDelegate : AppDelegate){
         
-        let entity =  NSEntityDescription.entityForName("Player", inManagedObjectContext:managedContext)
-        let person = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedContext)
-        person.setValue(name, forKey: kName)
-        do {
-            try managedContext.save()
-            players.append(person as! Player)
-        } catch let error as NSError  {
-            print("Could not save \(error), \(error.userInfo)")
-        }
-        
-        sortByELOAscending()
+        addPlayerWithName(name, score: 0, appDelegate: appDelegate)
     }
     
     func addPlayerWithName(name: String, score: Float, appDelegate : AppDelegate){
         
         let entity =  NSEntityDescription.entityForName("Player", inManagedObjectContext:managedContext)
         let person = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedContext)
+        
+        
+        let entityStats =  NSEntityDescription.entityForName("Stats", inManagedObjectContext:managedContext)
+        let stats = NSManagedObject(entity: entityStats!, insertIntoManagedObjectContext: managedContext)
+        
         person.setValue(name, forKey: kName)
         person.setValue(score, forKey: kScore)
         person.setValue(false, forKey: kIsRetired)
+        person.setValue(stats, forKey: kStats)
         do {
             try managedContext.save()
             players.append(person as! Player)
@@ -106,7 +102,12 @@ class ScoresBoard {
         
         let matchValue = ELOCalculator.getMatchValue(winner.score, loserScore: loser.score)
         
-        ELOCalculator.calculateEloRating(&winner.score,loserScore: &loser.score)
+        ELOCalculator.calculateEloRating(&winner.score,loserScore: &loser.score) //changes the values
+        
+        var stats = winner.valueForKey(kStats)
+        stats!.setValue(((stats?.valueForKey(kWinCount))! as! Int) + 1, forKey: kWinCount)
+        var stats2 = loser.valueForKey(kStats)
+        stats2!.setValue(((stats2?.valueForKey(kLoseCount))! as! Int) + 1, forKey: kLoseCount)
         
         match.setValue(matchValue, forKey:kValue)
         do {

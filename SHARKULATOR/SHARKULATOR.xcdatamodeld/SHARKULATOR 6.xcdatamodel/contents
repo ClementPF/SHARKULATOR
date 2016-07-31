@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10174" systemVersion="15F34" minimumToolsVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10174" systemVersion="15G31" minimumToolsVersion="Automatic">
     <entity name="Match" representedClassName="Match">
         <attribute name="date" optional="YES" attributeType="Date">
             <userInfo/>
@@ -13,29 +13,30 @@
         <relationship name="winner" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Player" syncable="YES"/>
         <userInfo/>
     </entity>
-    <entity name="Player" representedClassName="Player" syncable="YES">
+    <entity name="Player" representedClassName="Player">
         <attribute name="bestScore" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="isRetired" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="score" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
-        <relationship name="stats" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Stats" syncable="YES"/>
+        <relationship name="stats" maxCount="1" deletionRule="Nullify" destinationEntity="Stats" syncable="YES"/>
+        <userInfo/>
     </entity>
     <entity name="Stats" representedClassName="Stats" syncable="YES">
         <attribute name="bestScore" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
-        <attribute name="gamesCount" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="longestLoseStreak" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="longestWinStreak" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="loseCount" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="loseStreak" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="opponentScratchCount" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="scratchCount" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="tieCount" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="winCount" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="winStreak" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="gamesCount" optional="YES" attributeType="Float" defaultValueString="0" syncable="YES"/>
+        <attribute name="longestLoseStreak" optional="YES" attributeType="Float" defaultValueString="0" syncable="YES"/>
+        <attribute name="longestWinStreak" optional="YES" attributeType="Float" defaultValueString="0" syncable="YES"/>
+        <attribute name="loseCount" optional="YES" attributeType="Float" defaultValueString="0" syncable="YES"/>
+        <attribute name="loseStreak" optional="YES" attributeType="Float" defaultValueString="0" syncable="YES"/>
+        <attribute name="opponentScratchCount" optional="YES" attributeType="Float" defaultValueString="0" syncable="YES"/>
+        <attribute name="scratchCount" optional="YES" attributeType="Float" defaultValueString="0" syncable="YES"/>
+        <attribute name="tieCount" optional="YES" attributeType="Float" defaultValueString="0" syncable="YES"/>
+        <attribute name="winCount" optional="YES" attributeType="Float" defaultValueString="0" syncable="YES"/>
+        <attribute name="winStreak" optional="YES" attributeType="Float" defaultValueString="0" syncable="YES"/>
     </entity>
     <elements>
         <element name="Match" positionX="261" positionY="189" width="128" height="163"/>
         <element name="Player" positionX="-126" positionY="42" width="128" height="118"/>
-        <element name="Stats" positionX="-126" positionY="216" width="128" height="210"/>
+        <element name="Stats" positionX="-126" positionY="216" width="128" height="208"/>
     </elements>
 </model>

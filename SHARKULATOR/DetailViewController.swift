@@ -118,7 +118,15 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         if(playerMatchs.isEmpty){
             return;
         }
+        var stats = player?.valueForKey(kStats)
+        if let label = self.currentStreak {
+            var ws = stats?.valueForKey(kWinStreak) as! Float
+            var ls = stats?.valueForKey(kLoseStreak) as! Float
+            var i = ws > 0 ? ws : ls
+            label.text = "Current " + (ws > 0 ?  "winning" : "losing") + " streak of " + String(format: "%f", i) + ( i < 2 ? " game" : " games")
+        }
         
+        /*
         var i = 1;
         var isWinningStreak = playerMatchs[0].winner == player
         while(i < playerMatchs.count && ((playerMatchs[i].winner == player && playerMatchs[i].winner == playerMatchs[i-1].winner)
@@ -128,7 +136,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         
         if let label = self.currentStreak {
             label.text = "Current " + (isWinningStreak ?  "winning" : "losing") + " streak of " + String(format: "%d", i) + ( i < 2 ? " game" : " games")
-        }
+        }*/
     }
     
     func displayWorstEnemy() {

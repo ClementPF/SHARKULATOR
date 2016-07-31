@@ -12,16 +12,16 @@ import CoreData
 @objc(Stats)
 class Stats : NSManagedObject {
     @NSManaged var bestScore : Float
-    @NSManaged var gamesCount : Int
-    @NSManaged var winCount : Int
-    @NSManaged var loseCount : Int
-    @NSManaged var tieCount : Int
-    @NSManaged var winStreak : Int
-    @NSManaged var loseStreak : Int
-    @NSManaged var longestWinStreak : Int
-    @NSManaged var longestLoseStreak : Int
-    @NSManaged var scratchCount : Int
-    @NSManaged var opponentScratchCount : Int
+    @NSManaged var gamesCount : Float
+    @NSManaged var winCount : Float
+    @NSManaged var loseCount : Float
+    @NSManaged var tieCount : Float
+    @NSManaged var winStreak : Float
+    @NSManaged var loseStreak : Float
+    @NSManaged var longestWinStreak : Float
+    @NSManaged var longestLoseStreak : Float
+    @NSManaged var scratchCount : Float
+    @NSManaged var opponentScratchCount : Float
     
     func encodeWithCoder(aCoder: NSCoder!) {
         aCoder.encodeObject(bestScore, forKey:kBestScore)
@@ -46,37 +46,35 @@ class Stats : NSManagedObject {
     
     override func didChangeValueForKey(key: String) {
         super.didChangeValueForKey(key)
-        /*
         if key == kWinCount {
             self.gamesCount+=1
-            self.winCount+=1
+            //self.winCount+=1
             if(loseStreak == 0){
-                winStreak+=1
+                self.winStreak+=1
             }
             else{
-                loseStreak = 0
+                self.loseStreak = 0
             }
         }
         else if key == kLoseCount {
-            gamesCount+=1
-            loseCount+=1
+            self.gamesCount+=1
+            //self.loseCount+=1
             if(winStreak == 0){
-                loseStreak+=1
+                self.loseStreak+=1
             }
             else{
-                winStreak = 0
+                self.winStreak = 0
             }
         }
         else if key == kTieCount {
-            gamesCount+=1
-            tieCount+=1
-        }
-        else if key == kLoseCount {
-            if self.winStreak > self.longestWinStreak {
-                self.longestWinStreak = self.winStreak
-            }
+            self.gamesCount+=1
+            //self.tieCount+=1
         }
         else if key == kWinStreak {
+            var ws = Float.init(0.0)
+            ws = self.winStreak
+            var lws = Float.init(0.0)
+            lws = self.longestWinStreak
             if self.winStreak > self.longestWinStreak {
                 self.longestWinStreak = self.winStreak
             }
@@ -86,7 +84,6 @@ class Stats : NSManagedObject {
                 self.longestLoseStreak = self.loseStreak
             }
         }
-       */
     }
     
     override func awakeFromInsert() {

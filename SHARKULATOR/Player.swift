@@ -37,7 +37,7 @@ class Player : NSManagedObject {
         
         if key == kScore {
             if self.score > self.stats.bestScore {
-                stats.bestScore = score
+                stats.setValue(score, forKey:kBestScore)
             }
         }
     }
