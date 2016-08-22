@@ -60,11 +60,8 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
             
             badges = [TotalGamesBadge.init(value: stats!.valueForKey(kGamesCount) as! Float),
                       LongestWinStreak.init(value: stats!.valueForKey(kLongestWinStreak) as! Float),
-                      LongestLooseStreak.init(value: stats!.valueForKey(kLongestLoseStreak) as! Float),
-                      BestShark.init(value: 0),
-                      WorstFish.init(value: 0)]
-            
-            
+                      LongestLooseStreak.init(value: stats!.valueForKey(kLongestLoseStreak) as! Float)]
+       
             if let collection = self.collectionView {
                 collection.reloadData()
             }

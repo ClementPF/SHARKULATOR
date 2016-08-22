@@ -63,7 +63,7 @@ class ScoresBoard {
     
     func addPlayerWithName(name: String, appDelegate : AppDelegate){
         
-        addPlayerWithName(name, score: 0, appDelegate: appDelegate)
+        addPlayerWithName(name, score: 1000, appDelegate: appDelegate)
     }
     
     func addPlayerWithName(name: String, score: Float, appDelegate : AppDelegate){
@@ -75,7 +75,7 @@ class ScoresBoard {
         let entityStats =  NSEntityDescription.entityForName("Stats", inManagedObjectContext:managedContext)
         let stats = NSManagedObject(entity: entityStats!, insertIntoManagedObjectContext: managedContext)
         
-        person.setValue(name, forKey: kName)
+        person.setValue(name.capitalizeFirst, forKey: kName)
         person.setValue(score, forKey: kScore)
         person.setValue(false, forKey: kIsRetired)
         person.setValue(stats, forKey: kStats)

@@ -7,8 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		29308B831D6B92AD00206CF0 /* StringExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29308B821D6B92AD00206CF0 /* StringExt.swift */; };
 		294367251D4B1C9E0028D8B0 /* Badge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294367241D4B1C9E0028D8B0 /* Badge.swift */; };
 		294367291D4C74CC0028D8B0 /* Stats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294367281D4C74CC0028D8B0 /* Stats.swift */; };
+		29C4606F1D502A5E00D6D1F1 /* dataMigrationV3toV6.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29C4606E1D502A5E00D6D1F1 /* dataMigrationV3toV6.swift */; };
 		29C828BE1CBDEA060003A0D6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29C828BD1CBDEA060003A0D6 /* AppDelegate.swift */; };
 		29C828C11CBDEA060003A0D6 /* SHARKULATOR.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 29C828BF1CBDEA060003A0D6 /* SHARKULATOR.xcdatamodeld */; };
 		29C828C31CBDEA060003A0D6 /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29C828C21CBDEA060003A0D6 /* MasterViewController.swift */; };
@@ -47,10 +49,12 @@
 
 /* Begin PBXFileReference section */
 		290E15321CF4FC5E002BB39A /* SHARKULATOR 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "SHARKULATOR 3.xcdatamodel"; sourceTree = "<group>"; };
+		29308B821D6B92AD00206CF0 /* StringExt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExt.swift; sourceTree = "<group>"; };
 		294367241D4B1C9E0028D8B0 /* Badge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Badge.swift; sourceTree = "<group>"; };
 		294367281D4C74CC0028D8B0 /* Stats.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stats.swift; sourceTree = "<group>"; };
 		2943672A1D4C87470028D8B0 /* SHARKULATOR 5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "SHARKULATOR 5.xcdatamodel"; sourceTree = "<group>"; };
 		2943672B1D4C93D90028D8B0 /* SHARKULATOR 6.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "SHARKULATOR 6.xcdatamodel"; sourceTree = "<group>"; };
+		29C4606E1D502A5E00D6D1F1 /* dataMigrationV3toV6.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = dataMigrationV3toV6.swift; sourceTree = "<group>"; };
 		29C66F3A1CD9A0130020AA11 /* SHARKULATOR 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "SHARKULATOR 2.xcdatamodel"; sourceTree = "<group>"; };
 		29C828BA1CBDEA060003A0D6 /* SHARKULATOR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SHARKULATOR.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		29C828BD1CBDEA060003A0D6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -149,6 +153,8 @@
 				29C828CB1CBDEA060003A0D6 /* LaunchScreen.storyboard */,
 				29C828CE1CBDEA060003A0D6 /* Info.plist */,
 				29C828BF1CBDEA060003A0D6 /* SHARKULATOR.xcdatamodeld */,
+				29C4606E1D502A5E00D6D1F1 /* dataMigrationV3toV6.swift */,
+				29308B821D6B92AD00206CF0 /* StringExt.swift */,
 			);
 			path = SHARKULATOR;
 			sourceTree = "<group>";
@@ -319,9 +325,11 @@
 				29C828FC1CBDFCA20003A0D6 /* ELOCalculator.swift in Sources */,
 				294367291D4C74CC0028D8B0 /* Stats.swift in Sources */,
 				29C828BE1CBDEA060003A0D6 /* AppDelegate.swift in Sources */,
+				29308B831D6B92AD00206CF0 /* StringExt.swift in Sources */,
 				29C828C31CBDEA060003A0D6 /* MasterViewController.swift in Sources */,
 				29C828F31CBDF5BA0003A0D6 /* Match.swift in Sources */,
 				29C829001CBE18A00003A0D6 /* NewGameViewController.swift in Sources */,
+				29C4606F1D502A5E00D6D1F1 /* dataMigrationV3toV6.swift in Sources */,
 				29C828F61CBDF6BB0003A0D6 /* Constants.swift in Sources */,
 				29C828F41CBDF5BA0003A0D6 /* Player.swift in Sources */,
 				29C828FE1CBE0ED90003A0D6 /* HallOfFameViewController.swift in Sources */,
