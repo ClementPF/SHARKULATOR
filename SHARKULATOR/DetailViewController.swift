@@ -19,7 +19,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
     @IBOutlet weak var nameLabel : UILabel!
     @IBOutlet weak var scoreLabel : UILabel!
     @IBOutlet weak var positionLabel : UILabel!
-    @IBOutlet weak var bestScoreLabel : UILabel!
+    //@IBOutlet weak var bestScoreLabel : UILabel!
     @IBOutlet weak var tableMatch : UITableView!
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var totalGames: UIButton!
@@ -51,14 +51,15 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
             if let label = self.positionLabel {
                 label.text = "Position : " + String(scoresBoard.players.indexOf(player)! + 1)
             }
-            if let label = self.bestScoreLabel {
-                label.text = "Best score : " + (player.bestScore).description
-            }
+           // if let label = self.bestScoreLabel {
+           //     label.text = "Best score : " + (player.bestScore).description
+            //}
             
             playerMatchs = scoresBoard.getMatchsForUser(player)
             let stats = player.valueForKey(kStats)
             
             badges = [TotalGamesBadge.init(value: stats!.valueForKey(kGamesCount) as! Float),
+                      BestScoreBadge.init(value: stats!.valueForKey(kBestScore) as! Float),
                       LongestWinStreak.init(value: stats!.valueForKey(kLongestWinStreak) as! Float),
                       LongestLooseStreak.init(value: stats!.valueForKey(kLongestLoseStreak) as! Float)]
        
@@ -107,7 +108,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
             label.text = "Winning ratio of : " + String(format: "%.1f", ratioPerc) + "%"
         }
         if let label = self.scratchRatio {
-            label.text = scratchs > 2 ? String(format: "%d", scratchs) + " scratchs and counting" : String(format: "%d", scratchs) + " scratch"
+            label.text = "Scratchs : " + String(format: "%d", scratchs)
         }
     }
     
@@ -115,12 +116,12 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         if(playerMatchs.isEmpty){
             return;
         }
-        var stats = player?.valueForKey(kStats)
+        let stats = player?.valueForKey(kStats)
         if let label = self.currentStreak {
-            var ws = stats?.valueForKey(kWinStreak) as! Float
-            var ls = stats?.valueForKey(kLoseStreak) as! Float
-            var i = ws > 0 ? ws : ls
-            label.text = "Current " + (ws > 0 ?  "winning" : "losing") + " streak of " + String(format: "%f", i) + ( i < 2 ? " game" : " games")
+            let ws = stats?.valueForKey(kWinStreak) as! Int
+            let ls = stats?.valueForKey(kLoseStreak) as! Int
+            let i = ws > 0 ? ws : ls
+            label.text = "Current streak : " + String(format: "%d", i) + (ws > 0 ?  ( i < 2 ? "win" : "wins") : ( i < 2 ? "loss" : "losses"))
         }
         
         /*
@@ -138,13 +139,10 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
     
     func displayWorstEnemy() {
         
-        var opponents = NSMutableDictionary()
-        
-        var wins = 0
-        var ratioPerc : Float = 0
+        let opponents = NSMutableDictionary()
         
         for match in playerMatchs{
-            var opponent = player == match.winner ? match.loser.name : match.winner.name
+            let opponent = player == match.winner ? match.loser.name : match.winner.name
             var pointSumForUser = opponents[opponent]
             
             if (pointSumForUser == nil) {
@@ -390,14 +388,14 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
     
     //3
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("BadgeCell", forIndexPath: indexPath) as! UICollectionViewCell
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("BadgeCell", forIndexPath: indexPath)
         if(!badges.isEmpty){
-            var badge = badges[indexPath.section * 3 + indexPath.row]
-            var valueLabel = cell.viewWithTag(101) as! UILabel
-            valueLabel.text = String(format: "%.0f", badge.value as! Float)
-            var titleLabel = cell.viewWithTag(102) as! UILabel
+            let badge = badges[indexPath.section * 3 + indexPath.row]
+            let valueLabel = cell.viewWithTag(101) as! UILabel
+            valueLabel.text = String(format: "%.0f", badge.value )
+            let titleLabel = cell.viewWithTag(102) as! UILabel
             titleLabel.text = badge.displayName
-            var levelLabel = cell.viewWithTag(103) as! UILabel
+            let levelLabel = cell.viewWithTag(103) as! UILabel
             
             levelLabel.text = badge.levelNameForValue(badge.value)
             // Configure the cell

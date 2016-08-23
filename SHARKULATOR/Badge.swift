@@ -34,6 +34,21 @@ public class Badge {
     }
 }
 
+
+class BestScoreBadge : Badge{
+    
+    init(value: Float) {
+        super.init(
+            name: "bestScore",
+            displayName: "Best Score",
+            imageName: "",
+            value: value,
+            levels: [1000,1050,1075,1100,1125,1150,1175,1200,1250,1300],
+            levelsNames: ["🐛","🐜","🐝","🕷","🦂","🐍","🐊","🐆","🐅","🐲"]
+        )
+    }
+}
+
 class TotalGamesBadge : Badge{
 
     init(value: Float) {
@@ -56,8 +71,8 @@ class LongestWinStreak : Badge{
             displayName: "Top win streak",
             imageName: "",
             value: value,
-            levels: [3,5,7,9,11,13],
-            levelsNames: ["🔧","🔨","🔪","🗡","🔫","💣"]
+            levels: [0,3,5,7,9,11,13],
+            levelsNames: ["🍴","🔧","🔨","🔪","🗡","🔫","💣"]
         )
     }
 }
@@ -70,8 +85,8 @@ class LongestLooseStreak : Badge{
             displayName: "Top lose streak",
             imageName: "",
             value: value,
-            levels: [3,5,7,9,11,13],
-            levelsNames: ["🍌","🌽","🍆","🌯","🌶","🍍"]
+            levels: [0,3,5,7,9,11,13],
+            levelsNames: ["💨","🍌","🌽","🍆","🌯","🌶","🍍"]
         )
     }
 }
