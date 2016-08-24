@@ -34,7 +34,7 @@ class HallOfFameViewController: UIViewController,  NSFetchedResultsControllerDel
         let player = getPlayerWithCurrentHighestScore()
         
         currentChampion.text = "Current champion " + player.name + " with " + player.score.description
-        highestScoreLabel.text = "All time champion " + champion.name + " with " + champion.bestScore.description
+        highestScoreLabel.text = "All time champion " + champion.name + " with " + champion.stats.bestScore.description
         
         displayLonguestWinStreak()
         displayBreakStats()
@@ -49,7 +49,7 @@ class HallOfFameViewController: UIViewController,  NSFetchedResultsControllerDel
         //need score
         var topPlayer = scoresBoard.players[0]
         for player in scoresBoard.players{
-            if(player.bestScore > topPlayer.bestScore){
+            if(player.stats.bestScore > topPlayer.stats.bestScore){
                 topPlayer = player
             }
         }

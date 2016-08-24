@@ -121,7 +121,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
             let ws = stats?.valueForKey(kWinStreak) as! Int
             let ls = stats?.valueForKey(kLoseStreak) as! Int
             let i = ws > 0 ? ws : ls
-            label.text = "Current streak : " + String(format: "%d", i) + (ws > 0 ?  ( i < 2 ? "win" : "wins") : ( i < 2 ? "loss" : "losses"))
+            label.text = "Current streak : " + String(format: "%d", i) + (ws > 0 ?  ( i < 2 ? " win" : " wins") : ( i < 2 ? " loss" : " losses"))
         }
         
         /*

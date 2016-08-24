@@ -82,7 +82,7 @@ class LongestLooseStreak : Badge{
     init(value: Float) {
         super.init(
             name: "longestLoseStreak",
-            displayName: "Top lose streak",
+            displayName: "Top loss streak",
             imageName: "",
             value: value,
             levels: [0,3,5,7,9,11,13],
