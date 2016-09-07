@@ -28,6 +28,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
     @IBOutlet weak var bestEnemy: UILabel!
     @IBOutlet weak var scratchRatio: UILabel!
     @IBOutlet weak var currentStreak: UILabel!
+    @IBOutlet weak var filter: UISegmentedControl!
     
     var playerMatchs : [Match] = []
     var badges : [Badge] = []
@@ -37,6 +38,10 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
             // Update the view.
             self.configureView()
         }
+    }
+    
+    @IBAction func onFilterChanged(sender: AnyObject) {
+        tableMatch.reloadData()
     }
 
     func configureView() {
@@ -207,7 +212,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
      func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let sectionInfo = self.fetchedResultsController.sections![section]
         let numberOfGames = sectionInfo.numberOfObjects
-        return sectionInfo.numberOfObjects > 10 ? 10 : sectionInfo.numberOfObjects
+        return sectionInfo.numberOfObjects > 20 ? 20 : sectionInfo.numberOfObjects
     }
     
      func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -259,7 +264,8 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         fetchRequest.predicate = NSPredicate(format: "winner == %@ OR loser == %@ ", self.player!, self.player!)
         
         // Edit the sort key as appropriate.
-        let sortDescriptor = NSSortDescriptor(key: kDate, ascending: false)
+        let selector = filter.selectedSegmentIndex == 0 ? kDate : kPlayer
+        let sortDescriptor = NSSortDescriptor(key: selector, ascending: false)
         
         fetchRequest.sortDescriptors = [sortDescriptor]
         
