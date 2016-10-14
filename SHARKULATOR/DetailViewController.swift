@@ -93,27 +93,30 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         var wins = 0
         var ratioPerc : Float = 0
         
-        var scratchs = 0
-        var scratchsPerc : Float = 0
+        var scratchsDone = 0
+        var scratchsReceived = 0
         
         for match in playerMatchs{
             // calculate the win loss ratio
             if(player == match.winner){
                 wins = wins + 1
+                if(match.scratched){  // calculate the scratchs ratio
+                    scratchsReceived = scratchsReceived + 1
+                }
+
             }
             else if(match.scratched){  // calculate the scratchs ratio
-                scratchs = scratchs + 1
+                    scratchsDone = scratchsDone + 1
             }
         }
         
         ratioPerc = (Float (wins) / Float (playerMatchs.count))*100
-        scratchsPerc = (Float (scratchs) / Float (playerMatchs.count))*100
         
         if let label = self.ratio {
             label.text = "Winning ratio of : " + String(format: "%.1f", ratioPerc) + "%"
         }
         if let label = self.scratchRatio {
-            label.text = "Scratchs : " + String(format: "%d", scratchs)
+            label.text = "Scratchs : " + String(format: "👌 %d - 👉 %d", scratchsDone,scratchsReceived)
         }
     }
     
