@@ -63,7 +63,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
             playerMatchs = scoresBoard.getMatchsForUser(player)
             let stats = player.valueForKey(kStats)
             
-            badges = [TotalGamesBadge.init(value: stats!.valueForKey(kGamesCount) as! Float),
+            badges = [//TotalGamesBadge.init(value: stats!.valueForKey(kGamesCount) as! Float),
                       BestScoreBadge.init(value: stats!.valueForKey(kBestScore) as! Float),
                       LongestWinStreak.init(value: stats!.valueForKey(kLongestWinStreak) as! Float),
                       LongestLooseStreak.init(value: stats!.valueForKey(kLongestLoseStreak) as! Float)]

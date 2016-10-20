@@ -48,23 +48,13 @@ class Stats : NSManagedObject {
         super.didChangeValueForKey(key)
         if key == kWinCount {
             self.gamesCount+=1
-            //self.winCount+=1
-            if(loseStreak == 0){
-                self.winStreak+=1
-            }
-            else{
-                self.loseStreak = 0
-            }
+            self.winStreak+=1
+            self.loseStreak = Float.init(0.0)
         }
         else if key == kLoseCount {
             self.gamesCount+=1
-            //self.loseCount+=1
-            if(winStreak == 0){
-                self.loseStreak+=1
-            }
-            else{
-                self.winStreak = 0
-            }
+            self.loseStreak+=1
+            self.winStreak = Float.init(0.0)
         }
         else if key == kTieCount {
             self.gamesCount+=1

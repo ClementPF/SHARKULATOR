@@ -109,6 +109,11 @@ class ScoresBoard {
         var stats2 = loser.valueForKey(kStats)
         stats2!.setValue(((stats2?.valueForKey(kLoseCount))! as! Int) + 1, forKey: kLoseCount)
         
+        if(scratch){
+            stats!.setValue(((stats?.valueForKey(kOpponentScratchCount))! as! Int) + 1, forKey: kOpponentScratchCount)
+            stats2!.setValue(((stats2?.valueForKey(kScratchCount))! as! Int) + 1, forKey: kScratchCount)
+        }
+        
         match.setValue(matchValue, forKey:kValue)
         do {
             try managedContext.save()
