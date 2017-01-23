@@ -22,6 +22,7 @@ class Stats : NSManagedObject {
     @NSManaged var longestLoseStreak : Float
     @NSManaged var scratchCount : Float
     @NSManaged var opponentScratchCount : Float
+    @NSManaged var titleHolder : Bool
     
     func encodeWithCoder(aCoder: NSCoder!) {
         aCoder.encodeObject(bestScore, forKey:kBestScore)
@@ -35,6 +36,7 @@ class Stats : NSManagedObject {
         aCoder.encodeObject(longestLoseStreak, forKey:kLongestLoseStreak)
         aCoder.encodeObject(scratchCount, forKey:kScratchCount)
         aCoder.encodeObject(opponentScratchCount, forKey:kOpponentScratchCount)
+        aCoder.encodeObject(titleHolder, forKey:kTitleHolder)
     }
     
     convenience init(Stats entity: NSEntityDescription,

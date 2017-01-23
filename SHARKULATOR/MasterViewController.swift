@@ -25,9 +25,18 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
             let controllers = split.viewControllers
             self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
         }
-        //fakePlayer()
-        //fakeMatchs()
-        //createStatsTable()
+       // fakePlayer()
+       // fakeMatchs()
+       // createStatsTable()
+      /*  scoresBoard.playerWithName("Alex").stats.setValue(true, forKey: kTitleHolder)
+        
+        let appDel: AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        var managedContext = appDel.managedObjectContext
+        do {
+            try managedContext.save()
+        } catch let error as NSError  {
+            print("Could not save \(error), \(error.userInfo)")
+        }*/
     }
 
     func fakePlayer(){
@@ -44,6 +53,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         self.scoresBoard.addPlayerWithName("Ronak",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
         self.scoresBoard.addPlayerWithName("Amber",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
         self.scoresBoard.addPlayerWithName("Jason",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
+        
     }
     
     func fakeMatchs(){
@@ -258,6 +268,10 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
             cellTitle = object.valueForKey(kName)!.description
         }
         
+        if((object.valueForKey(kStats)?.valueForKey(kTitleHolder))! as! Bool){
+            cellTitle = cellTitle + "  🍯"
+        }
+        
         cell.textLabel!.text = cellTitle;
         cell.detailTextLabel!.text = String(format: "%.0f", round(object.valueForKey(kScore)! as! Float))
     }
@@ -287,7 +301,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         
         // Edit the section name key path and cache name if appropriate.
         // nil for section name key path means "no sections".
-        let aFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.managedObjectContext!, sectionNameKeyPath: "isRetired" , cacheName: "Master")
+        let aFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.managedObjectContext!, sectionNameKeyPath: "isRetired" , cacheName: nil)
         aFetchedResultsController.delegate = self
         _fetchedResultsController = aFetchedResultsController
         

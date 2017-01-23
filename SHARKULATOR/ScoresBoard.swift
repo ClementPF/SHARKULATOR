@@ -91,6 +91,11 @@ class ScoresBoard {
     
     func addMatch(winner: Player, loser: Player, breaker: Player, scratch: Bool, appDelegate : AppDelegate){
         
+        addMatch(winner, loser: loser, breaker: breaker, scratch: scratch, titleGame: false, appDelegate: appDelegate)
+    }
+    
+    func addMatch(winner: Player, loser: Player, breaker: Player, scratch: Bool, titleGame: Bool, appDelegate : AppDelegate){
+        
         let entity =  NSEntityDescription.entityForName("Match", inManagedObjectContext:managedContext)
         let match = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedContext)
         match.setValue(winner, forKey:kWinner)
@@ -99,10 +104,19 @@ class ScoresBoard {
         match.setValue(winner.score, forKey:kWinnerScore)
         match.setValue(loser.score, forKey:kLoserScore)
         match.setValue(scratch, forKey:kScratched)
+        match.setValue(titleGame, forKey:kTitleGame)
+        if(titleGame){
+            match.setValue(winner.stats.titleHolder ? winner : loser, forKey:kTitleHolder)
+        }
         
-        let matchValue = ELOCalculator.getMatchValue(winner.score, loserScore: loser.score)
+        var matchValue = ELOCalculator.getMatchValue(winner.score, loserScore: loser.score)
         
-        ELOCalculator.calculateEloRating(&winner.score,loserScore: &loser.score) //changes the values
+        if(titleGame && winner.stats.titleHolder){
+            matchValue = matchValue * 2
+        }
+        
+        winner.setValue(winner.score + matchValue, forKey: kScore)
+        loser.setValue(loser.score - matchValue, forKey: kScore)
         
         var stats = winner.valueForKey(kStats)
         stats!.setValue(((stats?.valueForKey(kWinCount))! as! Int) + 1, forKey: kWinCount)
@@ -112,6 +126,10 @@ class ScoresBoard {
         if(scratch){
             stats!.setValue(((stats?.valueForKey(kOpponentScratchCount))! as! Int) + 1, forKey: kOpponentScratchCount)
             stats2!.setValue(((stats2?.valueForKey(kScratchCount))! as! Int) + 1, forKey: kScratchCount)
+        }
+        if(titleGame){
+            stats!.setValue(true, forKey: kTitleHolder)
+            stats2!.setValue(false, forKey: kTitleHolder)
         }
         
         match.setValue(matchValue, forKey:kValue)
@@ -167,7 +185,8 @@ class ScoresBoard {
                 return player
             }
         }
-        assert(false)
+        var playerNil:Player? = nil
+        return playerNil!
     }
     
     func containsPlayerWithName(name : String) -> Bool{

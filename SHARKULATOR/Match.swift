@@ -20,6 +20,8 @@ class Match : NSManagedObject {
     @NSManaged var loserScore : Float
     @NSManaged var value : Float
     @NSManaged var date : NSDate
+    @NSManaged var titleGame : Bool
+    @NSManaged var titleHolder : Player
     
     func encodeWithCoder(aCoder: NSCoder!) {
         aCoder.encodeObject(winner, forKey:kWinner)
@@ -30,6 +32,8 @@ class Match : NSManagedObject {
         aCoder.encodeObject(loserScore, forKey:kLoserScore)
         aCoder.encodeObject(winnerScore, forKey:kWinnerScore)
         aCoder.encodeObject(scratched, forKey:kScratched)
+        aCoder.encodeObject(titleGame, forKey:kTitleGame)
+        aCoder.encodeObject(titleHolder, forKey:kTitleHolder)
     }
     
     convenience init(Match entity: NSEntityDescription,

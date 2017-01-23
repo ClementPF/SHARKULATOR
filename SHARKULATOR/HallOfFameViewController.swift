@@ -267,7 +267,7 @@ class HallOfFameViewController: UIViewController,  NSFetchedResultsControllerDel
         
         // Edit the section name key path and cache name if appropriate.
         // nil for section name key path means "no sections".
-        let aFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.managedObjectContext!, sectionNameKeyPath: "formattedDate", cacheName: "Master")
+        let aFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.managedObjectContext!, sectionNameKeyPath: "formattedDate", cacheName: nil)
         aFetchedResultsController.delegate = self
         _fetchedResultsController = aFetchedResultsController
         
@@ -298,7 +298,20 @@ class HallOfFameViewController: UIViewController,  NSFetchedResultsControllerDel
         
         winnerName.replaceRange(winnerName.startIndex...winnerName.startIndex, with: String(winnerName[winnerName.startIndex]).capitalizedString)
         looserName.replaceRange(looserName.startIndex...looserName.startIndex, with: String(looserName[looserName.startIndex]).capitalizedString)
-        cell.textLabel!.text =  winnerName + " won " + (match.scratched ? "👉👌" : "") + "against " + looserName
+        
+        var winText = " Won "
+        winText = winText + (match.scratched ? scratchSign + " " : "")
+        
+        if(match.titleGame){
+            let isTitleTransfered = match.titleHolder != match.winner
+            
+            winText = winText + "& " +
+                (isTitleTransfered ? successChallengedTitle : successDefendTitle)
+        }else{
+            winText = winText + "against ";
+        }
+        
+        cell.textLabel!.text =  winnerName + winText + looserName
         cell.detailTextLabel!.text =  value
     }
     

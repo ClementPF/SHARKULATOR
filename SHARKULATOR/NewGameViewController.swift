@@ -19,6 +19,9 @@ class NewGameViewController: UIViewController,UITextFieldDelegate {
     
     @IBOutlet weak var breakSegmentedControl: UISegmentedControl!
     @IBOutlet weak var calculateButton: UIButton!
+    
+    @IBOutlet weak var titleGameSwitch: UISwitch!
+    @IBOutlet weak var titleGameLabel: UILabel!
     @IBOutlet weak var scratchSwitch: UISwitch!
     
     override func viewDidLoad() {
@@ -59,7 +62,7 @@ class NewGameViewController: UIViewController,UITextFieldDelegate {
         let oldLoserScore = loser.score
         
         
-        scoresBoard.addMatch(winner, loser: loser, breaker: breaker, scratch : scratchSwitch.on, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
+        scoresBoard.addMatch(winner, loser: loser, breaker: breaker, scratch : scratchSwitch.on, titleGame: titleGameSwitch.on && titleGameSwitch.enabled, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
         
         winnerLabel.text = round(winner.score).description + " (" + round(winner.score - oldWinnerScore).description + ")"
         loserLabel.text = round(loser.score).description + " (" + round(loser.score - oldLoserScore).description + ")"
@@ -72,7 +75,22 @@ class NewGameViewController: UIViewController,UITextFieldDelegate {
         let winnerName = self.winnerTextField.text!
         let loserName = self.loserTextField.text!
         
-        calculateButton.enabled = (scoresBoard.containsPlayerWithName(winnerName) && scoresBoard.containsPlayerWithName(loserName)) && winnerName != loserName
+        let validWinnerName = scoresBoard.containsPlayerWithName(winnerName)
+        let validLoserName = scoresBoard.containsPlayerWithName(loserName)
+        
+        calculateButton.enabled = (validWinnerName && validLoserName) && winnerName != loserName
+        
+        if(validLoserName && validWinnerName){
+            let winner = scoresBoard.playerWithName(winnerName)
+            let loser = scoresBoard.playerWithName(loserName)
+            var b1 = winner.stats.titleHolder
+            var b = winner.stats.titleHolder
+            titleGameSwitch.enabled = winner.stats.titleHolder || loser.stats.titleHolder
+            titleGameLabel.alpha = titleGameSwitch.enabled ? 1 : 0.5
+        }else{
+            titleGameSwitch.enabled = false
+            titleGameLabel.alpha = 0.5
+        }
     }
     
     

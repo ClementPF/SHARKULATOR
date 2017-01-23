@@ -274,7 +274,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         
         // Edit the section name key path and cache name if appropriate.
         // nil for section name key path means "no sections".
-        let aFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.managedObjectContext!, sectionNameKeyPath: nil, cacheName: "Master")
+        let aFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.managedObjectContext!, sectionNameKeyPath: nil, cacheName: nil)
         aFetchedResultsController.delegate = self
         _fetchedResultsController = aFetchedResultsController
         
@@ -325,7 +325,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
     }
     
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
-        self.tableMatch.endUpdates()
+        //self.tableMatch.endUpdates()
     }
     
     //Called, when long press occurred
@@ -369,7 +369,20 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         let value = round(match.value).description
         
         opponentName.replaceRange(opponentName.startIndex...opponentName.startIndex, with: String(opponentName[opponentName.startIndex]).capitalizedString)
-        cell.textLabel!.text =  (playerWon ? "Won " : "Lost ") + (match.scratched ? "👉👌" : "") + " against " + opponentName
+        
+        var winText = (playerWon ? " Won " : " Lost ") + (match.scratched ? scratchSign + " " : "") + "against "
+        
+        if(match.titleGame){
+            let isChallenger = match.titleHolder != player
+            let isSuccess = match.winner == player
+            
+            winText = (playerWon ? " Won " : " Lost ") + "& " +
+                (isChallenger ?
+                    (isSuccess ? successChallengedTitle: failedChallengedTitle) :
+                    (isSuccess ? successDefendTitle: failedDefendTitle))
+        }
+        
+        cell.textLabel!.text =  winText + opponentName
         cell.detailTextLabel!.text =  value
     }
     
