@@ -16,33 +16,25 @@ class ScoresBoard {
     var players: [Player] = []
     var matchs: [Match] = []
     
-    var managedContext : NSManagedObjectContext = NSManagedObjectContext.new()
+    var managedContext : NSManagedObjectContext =  NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
     
-    class var sharedInstance: ScoresBoard {
-        struct Static {
-            static var instance: ScoresBoard?
-            static var token: dispatch_once_t = 0
-        }
-        
-        dispatch_once(&Static.token) {
-            Static.instance = ScoresBoard()
-        }
-        
-        return Static.instance!
-    }
+    
+    static let sharedInstance = ScoresBoard()
+    private init() {}
+    
     
     func sortByELOAscending(){
-        players.sortInPlace({ $0.score > $1.score})
+        players.sort(by: { $0.score > $1.score})
     }
     
-    func restore( appDelegate : AppDelegate){
+    func restore( _ appDelegate : AppDelegate){
         
         managedContext = appDelegate.managedObjectContext
-        let fetchRequest = NSFetchRequest(entityName: "Player")
-        let fetchRequest2 = NSFetchRequest(entityName: "Match")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Player")
+        let fetchRequest2 = NSFetchRequest<NSFetchRequestResult>(entityName: "Match")
         do {
-            let results = try managedContext.executeFetchRequest(fetchRequest)
-            let results2 = try managedContext.executeFetchRequest(fetchRequest2)
+            let results = try managedContext.fetch(fetchRequest)
+            let results2 = try managedContext.fetch(fetchRequest2)
             players = results as! [Player]
             matchs = results2 as! [Match]
             
@@ -52,7 +44,7 @@ class ScoresBoard {
         }
     }
     
-    func store(appDelegate : AppDelegate){
+    func store(_ appDelegate : AppDelegate){
         do {
             try managedContext.save()
         }catch let error as NSError  {
@@ -61,19 +53,19 @@ class ScoresBoard {
         sortByELOAscending()
     }
     
-    func addPlayerWithName(name: String, appDelegate : AppDelegate){
+    func addPlayerWithName(_ name: String, appDelegate : AppDelegate){
         
         addPlayerWithName(name, score: 1000, appDelegate: appDelegate)
     }
     
-    func addPlayerWithName(name: String, score: Float, appDelegate : AppDelegate){
+    func addPlayerWithName(_ name: String, score: Float, appDelegate : AppDelegate){
         
-        let entity =  NSEntityDescription.entityForName("Player", inManagedObjectContext:managedContext)
-        let person = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedContext)
+        let entity =  NSEntityDescription.entity(forEntityName: "Player", in:managedContext)
+        let person = NSManagedObject(entity: entity!, insertInto: managedContext)
         
         
-        let entityStats =  NSEntityDescription.entityForName("Stats", inManagedObjectContext:managedContext)
-        let stats = NSManagedObject(entity: entityStats!, insertIntoManagedObjectContext: managedContext)
+        let entityStats =  NSEntityDescription.entity(forEntityName: "Stats", in:managedContext)
+        let stats = NSManagedObject(entity: entityStats!, insertInto: managedContext)
         
         person.setValue(name.capitalizeFirst, forKey: kName)
         person.setValue(score, forKey: kScore)
@@ -89,15 +81,15 @@ class ScoresBoard {
         sortByELOAscending()
     }
     
-    func addMatch(winner: Player, loser: Player, breaker: Player, scratch: Bool, appDelegate : AppDelegate){
+    func addMatch(_ winner: Player, loser: Player, breaker: Player, scratch: Bool, appDelegate : AppDelegate){
         
         addMatch(winner, loser: loser, breaker: breaker, scratch: scratch, titleGame: false, appDelegate: appDelegate)
     }
     
-    func addMatch(winner: Player, loser: Player, breaker: Player, scratch: Bool, titleGame: Bool, appDelegate : AppDelegate){
+    func addMatch(_ winner: Player, loser: Player, breaker: Player, scratch: Bool, titleGame: Bool, appDelegate : AppDelegate){
         
-        let entity =  NSEntityDescription.entityForName("Match", inManagedObjectContext:managedContext)
-        let match = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedContext)
+        let entity =  NSEntityDescription.entity(forEntityName: "Match", in:managedContext)
+        let match = NSManagedObject(entity: entity!, insertInto: managedContext)
         match.setValue(winner, forKey:kWinner)
         match.setValue(loser, forKey:kLoser)
         match.setValue(breaker, forKey:kBreaker)
@@ -118,18 +110,18 @@ class ScoresBoard {
         winner.setValue(winner.score + matchValue, forKey: kScore)
         loser.setValue(loser.score - matchValue, forKey: kScore)
         
-        var stats = winner.valueForKey(kStats)
-        stats!.setValue(((stats?.valueForKey(kWinCount))! as! Int) + 1, forKey: kWinCount)
-        var stats2 = loser.valueForKey(kStats)
-        stats2!.setValue(((stats2?.valueForKey(kLoseCount))! as! Int) + 1, forKey: kLoseCount)
+        var stats = winner.value(forKey: kStats) as AnyObject
+        stats.setValue(((stats.value(forKey: kWinCount))! as! Int) + 1, forKey: kWinCount)
+        var stats2 = loser.value(forKey: kStats) as AnyObject
+        stats2.setValue(((stats2.value(forKey: kLoseCount))! as! Int) + 1, forKey: kLoseCount)
         
         if(scratch){
-            stats!.setValue(((stats?.valueForKey(kOpponentScratchCount))! as! Int) + 1, forKey: kOpponentScratchCount)
-            stats2!.setValue(((stats2?.valueForKey(kScratchCount))! as! Int) + 1, forKey: kScratchCount)
+            stats.setValue(((stats.value(forKey: kOpponentScratchCount))! as! Int) + 1, forKey: kOpponentScratchCount)
+            stats2.setValue(((stats2.value(forKey: kScratchCount))! as! Int) + 1, forKey: kScratchCount)
         }
         if(titleGame){
-            stats!.setValue(true, forKey: kTitleHolder)
-            stats2!.setValue(false, forKey: kTitleHolder)
+            stats.setValue(true, forKey: kTitleHolder)
+            stats2.setValue(false, forKey: kTitleHolder)
         }
         
         match.setValue(matchValue, forKey:kValue)
@@ -141,15 +133,15 @@ class ScoresBoard {
         }
     }
     
-    func getMatchsForUser(player: Player) -> [Match]{
+    func getMatchsForUser(_ player: Player) -> [Match]{
     
-        var fetchRequest = NSFetchRequest(entityName: "Match")
+        var fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Match")
         //fetchRequest.fetchLimit = 20
         fetchRequest.predicate = NSPredicate(format: "winner == %@ OR loser == %@ ", player,player)
         
         do {
-            var fetchedEntities = try managedContext.executeFetchRequest(fetchRequest) as! [Match]
-            fetchedEntities.sortInPlace({ $0.date.compare($1.date) == .OrderedDescending})
+            var fetchedEntities = try managedContext.fetch(fetchRequest) as! [Match]
+            fetchedEntities.sort(by: { $0.date.compare($1.date) == .orderedDescending})
             return fetchedEntities;
             // Do something with fetchedEntities
         } catch {
@@ -158,10 +150,10 @@ class ScoresBoard {
         return []
     }
         
-    func removeMatch(match: Match){
+    func removeMatch(_ match: Match){
         
         do {
-            managedContext.deleteObject(match);
+            managedContext.delete(match);
             do {
                 try managedContext.save()
             } catch let error as NSError  {
@@ -173,27 +165,27 @@ class ScoresBoard {
         }
     }
     
-    func isPlayerNameValid(name : String) -> Bool{
-        return !name.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet()).isEmpty
+    func isPlayerNameValid(_ name : String) -> Bool{
+        return !name.trimmingCharacters(in: CharacterSet.whitespaces).isEmpty
     }
     
-    func playerWithName(name : String) -> Player{
-        let trimmedName = name.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+    func playerWithName(_ name : String) -> Player{
+        let trimmedName = name.trimmingCharacters(in: CharacterSet.whitespaces)
         for player in players{
-            let playerName = player.valueForKey(kName) as! String
-            if(playerName.caseInsensitiveCompare(trimmedName) == NSComparisonResult.OrderedSame){
+            let playerName = player.value(forKey: kName) as! String
+            if(playerName.caseInsensitiveCompare(trimmedName) == ComparisonResult.orderedSame){
                 return player
             }
         }
-        var playerNil:Player? = nil
+        let playerNil:Player? = nil
         return playerNil!
     }
     
-    func containsPlayerWithName(name : String) -> Bool{
-        let trimmedName = name.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+    func containsPlayerWithName(_ name : String) -> Bool{
+        let trimmedName = name.trimmingCharacters(in: CharacterSet.whitespaces)
         for player in players{
-            let playerName = player.valueForKey(kName) as! String
-            if(playerName.caseInsensitiveCompare(trimmedName) == NSComparisonResult.OrderedSame){
+            let playerName = player.value(forKey: kName) as! String
+            if(playerName.caseInsensitiveCompare(trimmedName) == ComparisonResult.orderedSame){
                 return true
             }
         }

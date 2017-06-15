@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class Badge {
+open class Badge {
     var name : String
     var displayName : String
     var imageName : String
@@ -25,7 +25,7 @@ public class Badge {
         self.levelsNames = levelsNames
     }
     
-   public func levelNameForValue(value: Float) -> String{
+   open func levelNameForValue(_ value: Float) -> String{
         var i = 0
         while(i < levels.count-1 && value > levels[i]){
             i+=1
@@ -54,10 +54,10 @@ class TotalGamesBadge : Badge{
     init(value: Float) {
         super.init(
             name: "totalGames",
-            displayName: "Total Games",
+            displayName: "K-factor",
             imageName: "",
-            value: value,
-            levels: [1,5,10,25,50,100,200,500,1000],
+            value: value/10,
+            levels: [0.1,0.5,1,2.5,5,10,20,50,100],
             levelsNames: ["🐣","🐥","🐔","🐑","🐨","🐼","🐪","🐘","🦄"]
         )
     }
@@ -87,6 +87,35 @@ class LongestLooseStreak : Badge{
             value: value,
             levels: [0,3,5,7,9,11,13],
             levelsNames: ["💨","🍌","🌽","🍆","🌯","🌶","🍍"]
+        )
+    }
+}
+
+
+class TitleDefended : Badge{
+    
+    init(value: Float) {
+        super.init(
+            name: "titleDefended",
+            displayName: "Top " + titleGameSign + " win streak",
+            imageName: "",
+            value: value,
+            levels: [0,1,2,5,6,8,10],
+            levelsNames: ["❄️","🎀","🥉","🥈","🥇","🎖","🏅","🏵","🦄"]
+        )
+    }
+}
+
+class TitleGrab : Badge{
+    
+    init(value: Float) {
+        super.init(
+            name: "titleGrabed",
+            displayName: titleGameSign + " seized",
+            imageName: "",
+            value: value,
+            levels: [1,5,10,25,50,100,200,500,1000],
+            levelsNames: ["🐣","🐥","🐔","🐑","🐨","🐼","🐪","🐘","🦄"]
         )
     }
 }

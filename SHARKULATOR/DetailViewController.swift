@@ -12,7 +12,7 @@ import CoreData
 class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate , UITableViewDelegate, UITableViewDataSource , UICollectionViewDelegate, UICollectionViewDataSource {
 
     
-    var managedObjectContext: NSManagedObjectContext? = nil
+    var managedObjectContext: NSManagedObjectContext!
     
     var scoresBoard : ScoresBoard = ScoresBoard.sharedInstance
     
@@ -31,8 +31,12 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
     @IBOutlet weak var filter: UISegmentedControl!
     
     var playerMatchs : [Match] = []
+    var playerOpponents : [Player] = []
     var badges : [Badge] = []
 
+    var defendedTitle = 0;
+    var titleSeized = 0;
+    
     var player: Player? {
         didSet {
             // Update the view.
@@ -40,7 +44,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         }
     }
     
-    @IBAction func onFilterChanged(sender: AnyObject) {
+    @IBAction func onFilterChanged(_ sender: AnyObject) {
         tableMatch.reloadData()
     }
 
@@ -54,19 +58,24 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
                 label.text = "Score : " + (player.score).description
             }
             if let label = self.positionLabel {
-                label.text = "Position : " + String(scoresBoard.players.indexOf(player)! + 1)
+                label.text = "Position : " + String(scoresBoard.players.index(of: player)! + 1)
             }
            // if let label = self.bestScoreLabel {
            //     label.text = "Best score : " + (player.bestScore).description
             //}
             
             playerMatchs = scoresBoard.getMatchsForUser(player)
-            let stats = player.valueForKey(kStats)
+            let stats = player.value(forKey: kStats)
             
-            badges = [//TotalGamesBadge.init(value: stats!.valueForKey(kGamesCount) as! Float),
-                      BestScoreBadge.init(value: stats!.valueForKey(kBestScore) as! Float),
-                      LongestWinStreak.init(value: stats!.valueForKey(kLongestWinStreak) as! Float),
-                      LongestLooseStreak.init(value: stats!.valueForKey(kLongestLoseStreak) as! Float)]
+            calculateTitleStats();
+            
+            
+            badges = [TotalGamesBadge.init(value: (stats! as AnyObject).value(forKey:kGamesCount) as! Float),
+                      BestScoreBadge.init(value: (stats! as AnyObject).value(forKey: kBestScore) as! Float),
+                      LongestWinStreak.init(value: (stats! as AnyObject).value(forKey: kLongestWinStreak) as! Float),
+                      LongestLooseStreak.init(value: (stats! as AnyObject).value(forKey: kLongestLoseStreak) as! Float),
+                      TitleDefended.init(value: Float(defendedTitle)),
+                      TitleGrab.init(value: Float(titleSeized))]
        
             if let collection = self.collectionView {
                 collection.reloadData()
@@ -78,13 +87,42 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         }
     }
 
-    @IBAction func displayTotalGame(sender: UIButton) {
+    @IBAction func displayTotalGame(_ sender: UIButton) {
         var numberOfGames = 0
         if(player != nil){
             numberOfGames = scoresBoard.getMatchsForUser(player!).count
         }
-        sender.setTitle(String(numberOfGames), forState: UIControlState.Normal)
-        sender.selected = !sender.selected
+        sender.setTitle(String(numberOfGames), for: UIControlState())
+        sender.isSelected = !sender.isSelected
+    }
+    
+    
+    
+    func calculateTitleStats(){
+        
+        var total = 0;
+        titleSeized = 0;
+        defendedTitle = 0;
+        
+        
+        for match in playerMatchs{
+            // calculate the win loss ratio
+            if(match.titleGame){
+                if(player == match.winner && match.titleHolder == player){
+                    total += 1;
+                    defendedTitle = defendedTitle < total ? total : defendedTitle;
+                }else if (player == match.loser && match.titleHolder == player){
+                    total = 0;
+                }
+                
+                if (player == match.winner && match.titleHolder != player){
+                    var holder = match.titleHolder.name
+                    var winner = match.winner.name
+                    titleSeized += 1;
+                }
+            }
+        }
+        
     }
     
     
@@ -124,10 +162,10 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         if(playerMatchs.isEmpty){
             return;
         }
-        let stats = player?.valueForKey(kStats)
+        let stats = player?.value(forKey: kStats)
         if let label = self.currentStreak {
-            let ws = stats?.valueForKey(kWinStreak) as! Int
-            let ls = stats?.valueForKey(kLoseStreak) as! Int
+            let ws = (stats as AnyObject).value(forKey: kWinStreak) as! Int
+            let ls = (stats as AnyObject).value(forKey: kLoseStreak) as! Int
             let i = ws > 0 ? ws : ls
             label.text = "Current streak : " + String(format: "%d", i) + (ws > 0 ?  ( i < 2 ? " win" : " wins") : ( i < 2 ? " loss" : " losses"))
         }
@@ -154,8 +192,8 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
             var pointSumForUser = opponents[opponent]
             
             if (pointSumForUser == nil) {
-                opponents[opponent] = 0
-                pointSumForUser = 0
+                opponents[opponent] = Float(0)
+                pointSumForUser = Float(0)
             }
             
             if(player == match.winner){
@@ -167,8 +205,8 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
             opponents[opponent] = pointSumForUser
         }
         
-        var mostPointLost = 0 as! Float
-        var mostPointWon = 0 as! Float
+        var mostPointLost = Float(0)
+        var mostPointWon = Float(0)
         
         var worstEnemyName = ""
         var bestEnemy = ""
@@ -186,17 +224,17 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         }
         
         if let label = self.worstEnemy {
-            label.text = "Shark : " + worstEnemyName + " with " + String(format: "%.0f", round(mostPointLost as! Float)) + " points"
+            label.text = "Shark : " + worstEnemyName + " with " + String(format: "%.0f", round(mostPointLost )) + " points"
         }
         if let label = self.bestEnemy {
-            label.text = "Fish : " + bestEnemy + " with " + String(format: "%.0f", round(mostPointWon as! Float)) + " points"
+            label.text = "Fish : " + bestEnemy + " with " + String(format: "%.0f", round(mostPointWon )) + " points"
         }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: "longPress:")
+        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(DetailViewController.longPress(_:)))
         self.view.addGestureRecognizer(longPressRecognizer)
         self.configureView()
     }
@@ -208,32 +246,32 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
     
     // MARK: - UITableViewDelegate
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return player == nil ? 0 : self.fetchedResultsController.sections?.count ?? 0
     }
     
-     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let sectionInfo = self.fetchedResultsController.sections![section]
         let numberOfGames = sectionInfo.numberOfObjects
         return sectionInfo.numberOfObjects > 20 ? 20 : sectionInfo.numberOfObjects
     }
     
-     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
-        let object = self.fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject
+     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        let object = self.fetchedResultsController.object(at: indexPath) as! NSManagedObject
         self.configureCell(cell, withObject: object)
         return cell
     }
     
-     func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.
         return true
     }
     
-     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
+     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
             let context = self.fetchedResultsController.managedObjectContext
-            context.deleteObject(self.fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject)
+            context.delete(self.fetchedResultsController.object(at: indexPath) as! NSManagedObject)
             
             do {
                 try context.save()
@@ -247,19 +285,19 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
     }
     // MARK: - Fetched results controller
     
-    var fetchedResultsController: NSFetchedResultsController {
+    var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult> {
         if _fetchedResultsController != nil {
             return _fetchedResultsController!
         }
         
-        NSFetchedResultsController.deleteCacheWithName(nil);
+        NSFetchedResultsController<NSFetchRequestResult>.deleteCache(withName: nil);
         
-        let appDel: AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDel: AppDelegate = UIApplication.shared.delegate as! AppDelegate
         self.managedObjectContext = appDel.managedObjectContext
         
-        let fetchRequest = NSFetchRequest()
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>()
         // Edit the entity name as appropriate.
-        let entity = NSEntityDescription.entityForName("Match", inManagedObjectContext: self.managedObjectContext!)
+        let entity = NSEntityDescription.entity(forEntityName: "Match", in: self.managedObjectContext!)
         fetchRequest.entity = entity
         
         // Set the batch size to a suitable number.
@@ -279,7 +317,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         _fetchedResultsController = aFetchedResultsController
         
         do {
-            try _fetchedResultsController!.performFetch()
+            try _fetchedResultsController?.performFetch()
         } catch {
             // Replace this implementation with code to handle the error appropriately.
             // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
@@ -289,70 +327,70 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         
         return _fetchedResultsController!
     }
-    var _fetchedResultsController: NSFetchedResultsController? = nil
+    var _fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>?
     
-    func controllerWillChangeContent(controller: NSFetchedResultsController) {
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         self.tableMatch.beginUpdates()
     }
     
-    func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
         switch type {
-        case .Insert:
-            self.tableMatch.insertSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
-        case .Delete: break
+        case .insert:
+            self.tableMatch.insertSections(IndexSet(integer: sectionIndex), with: .fade)
+        case .delete: break
             //self.tableMatch.deleteSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
         default:
             return
         }
     }
     
-    func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         switch type {
-        case .Insert:
-            tableMatch.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
-        case .Delete: break
+        case .insert:
+            tableMatch.insertRows(at: [newIndexPath!], with: .fade)
+        case .delete: break
             //tableMatch.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
-        case .Update:
-            self.configureCell(tableMatch.cellForRowAtIndexPath(indexPath!)!, withObject: anObject as! NSManagedObject)
-        case .Move:
-            tableMatch.moveRowAtIndexPath(indexPath!, toIndexPath: newIndexPath!)
+        case .update:
+            self.configureCell(tableMatch.cellForRow(at: indexPath!)!, withObject: anObject as! NSManagedObject)
+        case .move:
+            tableMatch.moveRow(at: indexPath!, to: newIndexPath!)
         }
     }
     
-    func tableView(tableView: UITableView,
-                            editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
+    func tableView(_ tableView: UITableView,
+                            editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         return []
     }
     
-    func controllerDidChangeContent(controller: NSFetchedResultsController) {
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         //self.tableMatch.endUpdates()
     }
     
     //Called, when long press occurred
-    func longPress(longPressGestureRecognizer: UILongPressGestureRecognizer) {
+    func longPress(_ longPressGestureRecognizer: UILongPressGestureRecognizer) {
         
-        if longPressGestureRecognizer.state == UIGestureRecognizerState.Began {
+        if longPressGestureRecognizer.state == UIGestureRecognizerState.began {
             
-            let touchPoint = longPressGestureRecognizer.locationInView(tableMatch)
-            if let indexPath = tableMatch.indexPathForRowAtPoint(touchPoint) {
+            let touchPoint = longPressGestureRecognizer.location(in: tableMatch)
+            if let indexPath = tableMatch.indexPathForRow(at: touchPoint) {
                 
-                let alert = UIAlertController(title: "Alert", message: "Deleting the match is irreversible", preferredStyle: UIAlertControllerStyle.Alert)
-                alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil))
-                self.presentViewController(alert, animated: true, completion: nil)
+                let alert = UIAlertController(title: "Alert", message: "Deleting the match is irreversible", preferredStyle: UIAlertControllerStyle.alert)
+                alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil))
+                self.present(alert, animated: true, completion: nil)
                 
-                alert.addAction(UIAlertAction(title: "Delete", style: .Default, handler: { action in
+                alert.addAction(UIAlertAction(title: "Delete", style: .default, handler: { action in
                     switch action.style{
-                    case .Default:
+                    case .default:
                         print("default")
                         var match = self._fetchedResultsController?.fetchedObjects![indexPath.row] as! Match
                         match.winner.score = match.winner.score - match.value
                         match.loser.score = match.loser.score + match.value
-                        self.tableView(self.tableMatch,commitEditingStyle: UITableViewCellEditingStyle.Delete,forRowAtIndexPath: indexPath)
+                        self.tableView(self.tableMatch,commit: UITableViewCellEditingStyle.delete,forRowAt: indexPath)
                         self.configureView()
-                    case .Cancel:
+                    case .cancel:
                         print("cancel")
                         
-                    case .Destructive:
+                    case .destructive:
                         print("destructive")
                     }
                 }))
@@ -360,7 +398,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         }
     }
     
-    func configureCell(cell: UITableViewCell, withObject object: NSManagedObject) {
+    func configureCell(_ cell: UITableViewCell, withObject object: NSManagedObject) {
         let match = object as! Match
         
         let playerWon = match.winner == player
@@ -368,7 +406,7 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
         var opponentName =  opponent.name
         let value = round(match.value).description
         
-        opponentName.replaceRange(opponentName.startIndex...opponentName.startIndex, with: String(opponentName[opponentName.startIndex]).capitalizedString)
+        opponentName.replaceSubrange(opponentName.startIndex...opponentName.startIndex, with: String(opponentName[opponentName.startIndex]).capitalized)
         
         var winText = (playerWon ? " Won " : " Lost ") + (match.scratched ? scratchSign + " " : "") + "against "
         
@@ -399,18 +437,18 @@ class DetailViewController: UIViewController, NSFetchedResultsControllerDelegate
     // MARK: - Badges CollectionViewController
     
     //1
-    func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
         return abs(badges.count/3 + 1)
     }
     
     //2
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return min(badges.count - section * 3,3)
     }
     
     //3
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("BadgeCell", forIndexPath: indexPath)
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "BadgeCell", for: indexPath)
         if(!badges.isEmpty){
             let badge = badges[indexPath.section * 3 + indexPath.row]
             let valueLabel = cell.viewWithTag(101) as! UILabel

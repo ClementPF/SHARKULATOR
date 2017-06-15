@@ -12,7 +12,7 @@ extension String {
     var capitalizeFirst: String {
         if isEmpty { return "" }
         var result = self
-        result.replaceRange(startIndex...startIndex, with: String(self[startIndex]).uppercaseString)
+        result.replaceSubrange(startIndex...startIndex, with: String(self[startIndex]).uppercased())
         return result
     }
     

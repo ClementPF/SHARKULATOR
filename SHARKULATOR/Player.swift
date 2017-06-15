@@ -17,23 +17,23 @@ class Player : NSManagedObject {
     @NSManaged var isRetired : Bool
     @NSManaged var stats : Stats
     
-    func encodeWithCoder(aCoder: NSCoder!) {
-        aCoder.encodeObject(name, forKey:kName)
-        aCoder.encodeObject(score, forKey:kScore)
-        aCoder.encodeObject(bestScore, forKey:kBestScore)
-        aCoder.encodeObject(isRetired, forKey:kIsRetired)
-        aCoder.encodeObject(stats, forKey:kStats)
+    func encodeWithCoder(_ aCoder: NSCoder!) {
+        aCoder.encode(name, forKey:kName)
+        aCoder.encode(score, forKey:kScore)
+        aCoder.encode(bestScore, forKey:kBestScore)
+        aCoder.encode(isRetired, forKey:kIsRetired)
+        aCoder.encode(stats, forKey:kStats)
     }
     
     convenience init(Player entity: NSEntityDescription,
                 insertIntoManagedObjectContext context: NSManagedObjectContext?){
         
-        self.init(entity: entity, insertIntoManagedObjectContext: context)
+        self.init(entity: entity, insertInto: context)
 
     }
     
-    override func didChangeValueForKey(key: String) {
-        super.didChangeValueForKey(key)
+    override func didChangeValue(forKey key: String) {
+        super.didChangeValue(forKey: key)
         
         if key == kScore {
             if self.score > self.stats.bestScore {

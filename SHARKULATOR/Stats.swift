@@ -24,30 +24,30 @@ class Stats : NSManagedObject {
     @NSManaged var opponentScratchCount : Float
     @NSManaged var titleHolder : Bool
     
-    func encodeWithCoder(aCoder: NSCoder!) {
-        aCoder.encodeObject(bestScore, forKey:kBestScore)
-        aCoder.encodeObject(winCount, forKey:kWinCount)
-        aCoder.encodeObject(loseCount, forKey:kLoseCount)
-        aCoder.encodeObject(tieCount, forKey:kTieCount)
-        aCoder.encodeObject(gamesCount, forKey:kGamesCount)
-        aCoder.encodeObject(winStreak, forKey:kWinStreak)
-        aCoder.encodeObject(loseStreak, forKey:kLoseStreak)
-        aCoder.encodeObject(longestWinStreak, forKey:kLongestWinStreak)
-        aCoder.encodeObject(longestLoseStreak, forKey:kLongestLoseStreak)
-        aCoder.encodeObject(scratchCount, forKey:kScratchCount)
-        aCoder.encodeObject(opponentScratchCount, forKey:kOpponentScratchCount)
-        aCoder.encodeObject(titleHolder, forKey:kTitleHolder)
+    func encodeWithCoder(_ aCoder: NSCoder!) {
+        aCoder.encode(bestScore, forKey:kBestScore)
+        aCoder.encode(winCount, forKey:kWinCount)
+        aCoder.encode(loseCount, forKey:kLoseCount)
+        aCoder.encode(tieCount, forKey:kTieCount)
+        aCoder.encode(gamesCount, forKey:kGamesCount)
+        aCoder.encode(winStreak, forKey:kWinStreak)
+        aCoder.encode(loseStreak, forKey:kLoseStreak)
+        aCoder.encode(longestWinStreak, forKey:kLongestWinStreak)
+        aCoder.encode(longestLoseStreak, forKey:kLongestLoseStreak)
+        aCoder.encode(scratchCount, forKey:kScratchCount)
+        aCoder.encode(opponentScratchCount, forKey:kOpponentScratchCount)
+        aCoder.encode(titleHolder, forKey:kTitleHolder)
     }
     
     convenience init(Stats entity: NSEntityDescription,
                             insertIntoManagedObjectContext context: NSManagedObjectContext?){
         
-        self.init(entity: entity, insertIntoManagedObjectContext: context)
+        self.init(entity: entity, insertInto: context)
         
     }
     
-    override func didChangeValueForKey(key: String) {
-        super.didChangeValueForKey(key)
+    override func didChangeValue(forKey key: String) {
+        super.didChangeValue(forKey: key)
         if key == kWinCount {
             self.gamesCount+=1
             self.winStreak+=1

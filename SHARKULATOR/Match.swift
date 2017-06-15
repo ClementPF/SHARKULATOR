@@ -19,39 +19,39 @@ class Match : NSManagedObject {
     @NSManaged var winnerScore : Float
     @NSManaged var loserScore : Float
     @NSManaged var value : Float
-    @NSManaged var date : NSDate
+    @NSManaged var date : Date
     @NSManaged var titleGame : Bool
     @NSManaged var titleHolder : Player
     
-    func encodeWithCoder(aCoder: NSCoder!) {
-        aCoder.encodeObject(winner, forKey:kWinner)
-        aCoder.encodeObject(loser, forKey:kLoser)
-        aCoder.encodeObject(loser, forKey:kBreaker)
-        aCoder.encodeObject(value, forKey:kValue)
-        aCoder.encodeObject(date, forKey:kDate)
-        aCoder.encodeObject(loserScore, forKey:kLoserScore)
-        aCoder.encodeObject(winnerScore, forKey:kWinnerScore)
-        aCoder.encodeObject(scratched, forKey:kScratched)
-        aCoder.encodeObject(titleGame, forKey:kTitleGame)
-        aCoder.encodeObject(titleHolder, forKey:kTitleHolder)
+    func encodeWithCoder(_ aCoder: NSCoder!) {
+        aCoder.encode(winner, forKey:kWinner)
+        aCoder.encode(loser, forKey:kLoser)
+        aCoder.encode(loser, forKey:kBreaker)
+        aCoder.encode(value, forKey:kValue)
+        aCoder.encode(date, forKey:kDate)
+        aCoder.encode(loserScore, forKey:kLoserScore)
+        aCoder.encode(winnerScore, forKey:kWinnerScore)
+        aCoder.encode(scratched, forKey:kScratched)
+        aCoder.encode(titleGame, forKey:kTitleGame)
+        aCoder.encode(titleHolder, forKey:kTitleHolder)
     }
     
     convenience init(Match entity: NSEntityDescription,
                 insertIntoManagedObjectContext context: NSManagedObjectContext?){
         
-        self.init(entity: entity, insertIntoManagedObjectContext: context)
+        self.init(entity: entity, insertInto: context)
     }
     
     override func awakeFromInsert() {
         super.awakeFromInsert()
-        self.date = NSDate()
+        self.date = Date()
     }
     
     var formattedDate: String {
         get {
-            let dateFormatter = NSDateFormatter()
+            let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "dd-MM-yyyy"
-            return dateFormatter.stringFromDate(self.date)
+            return dateFormatter.string(from: self.date)
         }
     }
 }

@@ -8,6 +8,19 @@
 
 import UIKit
 import CoreData
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
 
 class MasterViewController: UITableViewController, NSFetchedResultsControllerDelegate {
 
@@ -16,9 +29,11 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
 
     var scoresBoard : ScoresBoard = ScoresBoard.sharedInstance
     
+    var _fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        scoresBoard.restore(UIApplication.sharedApplication().delegate as! AppDelegate)
+        scoresBoard.restore(UIApplication.shared.delegate as! AppDelegate)
         // Do any additional setup after loading the view, typically from a nib.
         
         if let split = self.splitViewController {
@@ -40,19 +55,19 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     }
 
     func fakePlayer(){
-        self.scoresBoard.addPlayerWithName("Alex",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
-        self.scoresBoard.addPlayerWithName("Clement",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
-        self.scoresBoard.addPlayerWithName("Sal",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
-        self.scoresBoard.addPlayerWithName("Frank",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
-        self.scoresBoard.addPlayerWithName("Gerrit",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
-        self.scoresBoard.addPlayerWithName("Erik",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
-        self.scoresBoard.addPlayerWithName("Jim",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
-        self.scoresBoard.addPlayerWithName("Ash",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
-        self.scoresBoard.addPlayerWithName("Danny",score:1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
-        self.scoresBoard.addPlayerWithName("Basit",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
-        self.scoresBoard.addPlayerWithName("Ronak",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
-        self.scoresBoard.addPlayerWithName("Amber",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
-        self.scoresBoard.addPlayerWithName("Jason",score: 1000, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
+        self.scoresBoard.addPlayerWithName("Alex",score: 1000, appDelegate: UIApplication.shared.delegate as! AppDelegate)
+        self.scoresBoard.addPlayerWithName("Clement",score: 1000, appDelegate: UIApplication.shared.delegate as! AppDelegate)
+        self.scoresBoard.addPlayerWithName("Sal",score: 1000, appDelegate: UIApplication.shared.delegate as! AppDelegate)
+        self.scoresBoard.addPlayerWithName("Frank",score: 1000, appDelegate: UIApplication.shared.delegate as! AppDelegate)
+        self.scoresBoard.addPlayerWithName("Gerrit",score: 1000, appDelegate: UIApplication.shared.delegate as! AppDelegate)
+        self.scoresBoard.addPlayerWithName("Erik",score: 1000, appDelegate: UIApplication.shared.delegate as! AppDelegate)
+        self.scoresBoard.addPlayerWithName("Jim",score: 1000, appDelegate: UIApplication.shared.delegate as! AppDelegate)
+        self.scoresBoard.addPlayerWithName("Ash",score: 1000, appDelegate: UIApplication.shared.delegate as! AppDelegate)
+        self.scoresBoard.addPlayerWithName("Danny",score:1000, appDelegate: UIApplication.shared.delegate as! AppDelegate)
+        self.scoresBoard.addPlayerWithName("Basit",score: 1000, appDelegate: UIApplication.shared.delegate as! AppDelegate)
+        self.scoresBoard.addPlayerWithName("Ronak",score: 1000, appDelegate: UIApplication.shared.delegate as! AppDelegate)
+        self.scoresBoard.addPlayerWithName("Amber",score: 1000, appDelegate: UIApplication.shared.delegate as! AppDelegate)
+        self.scoresBoard.addPlayerWithName("Jason",score: 1000, appDelegate: UIApplication.shared.delegate as! AppDelegate)
         
     }
     
@@ -63,16 +78,16 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
                     let bool = arc4random_uniform(2) == 0 ? true: false
                     let bool2 = arc4random_uniform(2) == 0 ? true: false
                     let bool3 = arc4random_uniform(20) == 0 ? true: false
-                self.scoresBoard.addMatch(bool ? pl : pl2, loser: bool ? pl2 : pl, breaker: bool2 ? pl2 : pl, scratch: bool3, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
+                self.scoresBoard.addMatch(bool ? pl : pl2, loser: bool ? pl2 : pl, breaker: bool2 ? pl2 : pl, scratch: bool3, appDelegate: UIApplication.shared.delegate as! AppDelegate)
                 }
             }
         }
     }
     
     func createStatsTable(){
-        let appDel: AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDel: AppDelegate = UIApplication.shared.delegate as! AppDelegate
         var managedContext = appDel.managedObjectContext
-        let entity =  NSEntityDescription.entityForName("Stats", inManagedObjectContext:managedContext)
+        let entity =  NSEntityDescription.entity(forEntityName: "Stats", in:managedContext)
         
         for  pl in self.scoresBoard.players {
             var matchs = scoresBoard.getMatchsForUser(pl)
@@ -111,7 +126,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
                 }
             }
             
-            let stats = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedContext)
+            let stats = NSManagedObject(entity: entity!, insertInto: managedContext)
             stats.setValue(matchs.count, forKey:kGamesCount)
             stats.setValue(winCount, forKey:kWinCount)
             stats.setValue(loseCount, forKey:kLoseCount)
@@ -133,8 +148,8 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         }
     }
     
-    override func viewWillAppear(animated: Bool) {
-        self.clearsSelectionOnViewWillAppear = self.splitViewController!.collapsed
+    override func viewWillAppear(_ animated: Bool) {
+        self.clearsSelectionOnViewWillAppear = self.splitViewController!.isCollapsed
         super.viewWillAppear(animated)
     }
 
@@ -143,36 +158,36 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         // Dispose of any resources that can be recreated.
     }
     
-    @IBAction func createUser(sender: AnyObject) {
+    @IBAction func createUser(_ sender: AnyObject) {
         
-        let alert = UIAlertController(title: "Create new user", message: "Enter yo' name Player", preferredStyle: .Alert)
+        let alert = UIAlertController(title: "Create new user", message: "Enter yo' name Player", preferredStyle: .alert)
         
-        alert.addTextFieldWithConfigurationHandler({ (textField) -> Void in
+        alert.addTextField(configurationHandler: { (textField) -> Void in
             textField.text = ""
         })
         
-        alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: { (action) -> Void in
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action) -> Void in
             let textField = alert.textFields![0] as UITextField
             print("Text field: \(textField.text)")
             let name = textField.text
             if(self.scoresBoard.isPlayerNameValid(name!) && !self.scoresBoard.containsPlayerWithName(name!)){
-                self.scoresBoard.addPlayerWithName(name!, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
+                self.scoresBoard.addPlayerWithName(name!, appDelegate: UIApplication.shared.delegate as! AppDelegate)
                 self.tableView.reloadData();
             }
         }))
         
-        self.presentViewController(alert, animated: true, completion: nil)
+        self.present(alert, animated: true, completion: nil)
     }
 
     // MARK: - Segues
 
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showDetail" {
             if let indexPath = self.tableView.indexPathForSelectedRow {
-            let object = self.fetchedResultsController.objectAtIndexPath(indexPath)
-                let controller = (segue.destinationViewController as! UINavigationController).topViewController as! DetailViewController
+            let object = self.fetchedResultsController.object(at: indexPath)
+                let controller = (segue.destination as! UINavigationController).topViewController as! DetailViewController
                 controller.player = object as! Player
-                controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
+                controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem
                 controller.navigationItem.leftItemsSupplementBackButton = true
             }
         }
@@ -180,33 +195,33 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
 
     // MARK: - Table View
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return self.fetchedResultsController.sections?.count < 2 ? (self.fetchedResultsController.sections?.count)! : 2
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let sectionInfo = self.fetchedResultsController.sections![section]
         return sectionInfo.numberOfObjects
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
-        let object = self.fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        let object = self.fetchedResultsController.object(at: indexPath) as! NSManagedObject
         self.configureCell(cell, index: indexPath, withObject: object)
         return cell
     }
 
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.
         return true
     }
 
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
             let context = self.fetchedResultsController.managedObjectContext
-            var playerObject = self.fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject
+            let playerObject = self.fetchedResultsController.object(at: indexPath) as! NSManagedObject
             playerObject.setValue(true, forKey: kIsRetired)
-            context.refreshObject(playerObject, mergeChanges: true)
+            context.refresh(playerObject, mergeChanges: true)
             do {
                 try context.save()
             } catch {
@@ -218,17 +233,17 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         }
     }
     
-    override func tableView(tableView: UITableView,
-                            editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
+    override func tableView(_ tableView: UITableView,
+                            editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         if(indexPath.section == 0){
-            let retire = UITableViewRowAction(style: .Normal, title: "Retire") { action, index in
+            let retire = UITableViewRowAction(style: .normal, title: "Retire") { action, index in
                 
                 let context = self.fetchedResultsController.managedObjectContext
-                var playerObject = self.fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject
+                let playerObject = self.fetchedResultsController.object(at: indexPath) as! NSManagedObject
                 playerObject.setValue(true, forKey: kIsRetired)
-                context.refreshObject(playerObject, mergeChanges: true)
+                context.refresh(playerObject, mergeChanges: true)
                 do {
-                    print("Retire " + playerObject.valueForKey(kName)!.description + "isRetired = " + playerObject.valueForKey(kIsRetired)!.description)
+                    print("Retire " + (playerObject.value(forKey: kName)! as AnyObject).description + "isRetired = " + (playerObject.value(forKey: kIsRetired)! as AnyObject).description)
                     try context.save()
                 } catch {
                     // Replace this implementation with code to handle the error appropriately.
@@ -239,14 +254,14 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
             }
             return [retire]
         }else{
-            let unretire = UITableViewRowAction(style: .Normal, title: "Unretire") { action, index in
+            let unretire = UITableViewRowAction(style: .normal, title: "Unretire") { action, index in
                 
                 let context = self.fetchedResultsController.managedObjectContext
-                var playerObject = self.fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject
+                let playerObject = self.fetchedResultsController.object(at: indexPath) as! NSManagedObject
                 playerObject.setValue(false, forKey: kIsRetired)
-                context.refreshObject(playerObject, mergeChanges: true)
+                context.refresh(playerObject, mergeChanges: true)
                 do {
-                     print("Unretire " + playerObject.valueForKey(kName)!.description + "isRetired = " + playerObject.valueForKey(kIsRetired)!.description)
+                     print("Unretire " + (playerObject.value(forKey: kName)! as AnyObject).description + "isRetired = " + (playerObject.value(forKey: kIsRetired)! as AnyObject).description)
                     try context.save()
                 } catch {
                     // Replace this implementation with code to handle the error appropriately.
@@ -259,35 +274,35 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         }
     }
     
-    func configureCell(cell: UITableViewCell, index : NSIndexPath, withObject object: NSManagedObject) {
+    func configureCell(_ cell: UITableViewCell, index : IndexPath, withObject object: NSManagedObject) {
         var cellTitle = "'";
         if(index.section == 0){
             let i = index.row == 0 ? "\u{265B}" : (index.row + 1).description
-            cellTitle = i + " - " + object.valueForKey(kName)!.description
+            cellTitle = i + " - " + (object.value(forKey: kName)! as AnyObject).description
         }else{
-            cellTitle = object.valueForKey(kName)!.description
+            cellTitle = (object.value(forKey: kName)! as AnyObject).description
         }
         
-        if((object.valueForKey(kStats)?.valueForKey(kTitleHolder))! as! Bool){
+        if(((object.value(forKey: kStats) as AnyObject).value(forKey: kTitleHolder))! as! Bool){
             cellTitle = cellTitle + "  🍯"
         }
         
         cell.textLabel!.text = cellTitle;
-        cell.detailTextLabel!.text = String(format: "%.0f", round(object.valueForKey(kScore)! as! Float))
+        cell.detailTextLabel!.text = String(format: "%.0f", round(object.value(forKey: kScore)! as! Float))
     }
 
     // MARK: - Fetched results controller
 
-    var fetchedResultsController: NSFetchedResultsController {
+    var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult> {
         if _fetchedResultsController != nil {
             return _fetchedResultsController!
         }
         
-        NSFetchedResultsController.deleteCacheWithName(nil);
+        NSFetchedResultsController<NSFetchRequestResult>.deleteCache(withName: nil);
         
-        let fetchRequest = NSFetchRequest()
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>()
         // Edit the entity name as appropriate.
-        let entity = NSEntityDescription.entityForName("Player", inManagedObjectContext: self.managedObjectContext!)
+        let entity = NSEntityDescription.entity(forEntityName: "Player", in: self.managedObjectContext!)
         fetchRequest.entity = entity
         
         // Set the batch size to a suitable number.
@@ -306,7 +321,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         _fetchedResultsController = aFetchedResultsController
         
         do {
-            try _fetchedResultsController!.performFetch()
+            try _fetchedResultsController?.performFetch()
         } catch {
              // Replace this implementation with code to handle the error appropriately.
              // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
@@ -315,14 +330,13 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         }
         
         return _fetchedResultsController!
-    }    
-    var _fetchedResultsController: NSFetchedResultsController? = nil
+    }
 
-    func controllerWillChangeContent(controller: NSFetchedResultsController) {
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         self.tableView.beginUpdates()
     }
     
-    override func tableView( tableView : UITableView,  titleForHeaderInSection section: Int)->String
+    override func tableView( _ tableView : UITableView,  titleForHeaderInSection section: Int)->String
     {
         switch(section)
         {
@@ -333,49 +347,49 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         }
     }
     
-    override func tableView(tableView: UITableView,
+    override func tableView(_ tableView: UITableView,
                      heightForHeaderInSection section: Int) -> CGFloat{
         switch(section)
         {
         case 1:return 30
             break
-        default :return CGFloat.min
+        default :return CGFloat.leastNormalMagnitude
             break
         }
     }
     
-    override func tableView(tableView: UITableView,
+    override func tableView(_ tableView: UITableView,
                             heightForFooterInSection section: Int) -> CGFloat{
-        return CGFloat.min
+        return CGFloat.leastNormalMagnitude
     }
     
-    func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
         switch type {
-            case .Insert:
-                self.tableView.insertSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
-            case .Delete:
-                self.tableView.deleteSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
+            case .insert:
+                self.tableView.insertSections(IndexSet(integer: sectionIndex), with: .fade)
+            case .delete:
+                self.tableView.deleteSections(IndexSet(integer: sectionIndex), with: .fade)
             default:
                 return
         }
     }
 
-    func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         switch type {
-            case .Insert:
-                tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
-            case .Delete:
-                tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
-            case .Update:
-                self.configureCell(tableView.cellForRowAtIndexPath(indexPath!)!, index: indexPath! , withObject: anObject as! NSManagedObject)
-            case .Move:
+            case .insert:
+                tableView.insertRows(at: [newIndexPath!], with: .fade)
+            case .delete:
+                tableView.deleteRows(at: [indexPath!], with: .fade)
+            case .update:
+                self.configureCell(tableView.cellForRow(at: indexPath!)!, index: indexPath! , withObject: anObject as! NSManagedObject)
+            case .move:
                 //tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
                 //tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
-                tableView.moveRowAtIndexPath(indexPath!, toIndexPath: newIndexPath!) //should work but causes problem when the retired section is empty
+                tableView.moveRow(at: indexPath!, to: newIndexPath!) //should work but causes problem when the retired section is empty
         }
     }
 
-    func controllerDidChangeContent(controller: NSFetchedResultsController) {
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         self.tableView.endUpdates()
         self.tableView.reloadData()
     }

@@ -26,6 +26,7 @@ class HallOfFameViewController: UIViewController,  NSFetchedResultsControllerDel
     @IBOutlet weak var breakStats: UILabel!
     @IBOutlet weak var tableMatch : UITableView!
     
+    var _fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -72,7 +73,7 @@ class HallOfFameViewController: UIViewController,  NSFetchedResultsControllerDel
         
         var winStreakGlobal = 0
         for player in scoresBoard.players{
-            var ws = getLongestStreakForPlayer(player, forWins: true)
+            let ws = getLongestStreakForPlayer(player, forWins: true)
             if(ws > winStreakGlobal){
                 winStreakGlobal = ws
                 topPlayer = player
@@ -90,7 +91,7 @@ class HallOfFameViewController: UIViewController,  NSFetchedResultsControllerDel
         
         var loseStreakGlobal = 0
         for player in scoresBoard.players{
-            var ws = getLongestStreakForPlayer(player, forWins: false)
+            let ws = getLongestStreakForPlayer(player, forWins: false)
             if(ws > loseStreakGlobal){
                 loseStreakGlobal = ws
                 topPlayer = player
@@ -118,17 +119,17 @@ class HallOfFameViewController: UIViewController,  NSFetchedResultsControllerDel
         }
     }
     
-    @IBAction func close(sender: AnyObject) {
-        self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+    @IBAction func close(_ sender: AnyObject) {
+        self.presentingViewController?.dismiss(animated: true, completion: nil)
     }
     
-    func getLongestStreak(forWins : Bool)-> Player{
+    func getLongestStreak(_ forWins : Bool)-> Player{
         
-        var topPlayer = scoresBoard.players[0]
+        let topPlayer = scoresBoard.players[0]
         
         var winStreakGlobal = 0
         for player in scoresBoard.players{
-            var ws = getLongestStreakForPlayer(player, forWins: forWins)
+            let ws = getLongestStreakForPlayer(player, forWins: forWins)
             if(ws > winStreakGlobal){
                 winStreakGlobal = ws
             }
@@ -140,7 +141,7 @@ class HallOfFameViewController: UIViewController,  NSFetchedResultsControllerDel
         return topPlayer
     }
     
-    func getLongestStreakForPlayer(player : Player, forWins : Bool)-> Int{
+    func getLongestStreakForPlayer(_ player : Player, forWins : Bool)-> Int{
         
         var winStreakPlayer = 0
         var loseStreakPlayer = 0
@@ -169,32 +170,32 @@ class HallOfFameViewController: UIViewController,  NSFetchedResultsControllerDel
     
     // MARK: - UITableViewDelegate
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return self.fetchedResultsController.sections?.count ?? 0
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let sectionInfo = self.fetchedResultsController.sections![section]
         return sectionInfo.numberOfObjects > 20 ? 20 : sectionInfo.numberOfObjects
     }
 
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
-        let object = self.fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        let object = self.fetchedResultsController.object(at: indexPath) as! NSManagedObject
         self.configureCell(cell, withObject: object)
         return cell
     }
     
-    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.
         return true
     }
     
-    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
             let context = self.fetchedResultsController.managedObjectContext
-            context.deleteObject(self.fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject)
+            context.delete(self.fetchedResultsController.object(at: indexPath) as! NSManagedObject)
             
             do {
                 try context.save()
@@ -208,9 +209,9 @@ class HallOfFameViewController: UIViewController,  NSFetchedResultsControllerDel
     }
     
     
-    func tableView( tableView : UITableView,  titleForHeaderInSection section: Int)->String
+    func tableView( _ tableView : UITableView,  titleForHeaderInSection section: Int)->String
     {
-        return (self.fetchedResultsController.objectAtIndexPath(NSIndexPath.init(forRow: 0, inSection: section))as! Match).formattedDate
+        return (self.fetchedResultsController.object(at: IndexPath.init(row: 0, section: section))as! Match).formattedDate
         /*
         switch(section)
         {
@@ -223,7 +224,7 @@ class HallOfFameViewController: UIViewController,  NSFetchedResultsControllerDel
         
     }
     
-    func tableView(tableView: UITableView,
+    func tableView(_ tableView: UITableView,
                             heightForHeaderInSection section: Int) -> CGFloat{
         switch(section)
         {
@@ -234,27 +235,27 @@ class HallOfFameViewController: UIViewController,  NSFetchedResultsControllerDel
         }
     }
     
-    func tableView(tableView: UITableView,
+    func tableView(_ tableView: UITableView,
                             heightForFooterInSection section: Int) -> CGFloat{
-        return CGFloat.min
+        return CGFloat.leastNormalMagnitude
     }
     
     
     // MARK: - Fetched results controller
     
-    var fetchedResultsController: NSFetchedResultsController {
+    var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult> {
         if _fetchedResultsController != nil {
             return _fetchedResultsController!
         }
         
-        NSFetchedResultsController.deleteCacheWithName(nil);
+        NSFetchedResultsController<NSFetchRequestResult>.deleteCache(withName: nil);
         
-        let appDel: AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDel: AppDelegate = UIApplication.shared.delegate as! AppDelegate
         self.managedObjectContext = appDel.managedObjectContext
         
-        let fetchRequest = NSFetchRequest()
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>()
         // Edit the entity name as appropriate.
-        let entity = NSEntityDescription.entityForName("Match", inManagedObjectContext: self.managedObjectContext!)
+        let entity = NSEntityDescription.entity(forEntityName: "Match", in: self.managedObjectContext!)
         fetchRequest.entity = entity
         
         // Set the batch size to a suitable number.
@@ -282,22 +283,21 @@ class HallOfFameViewController: UIViewController,  NSFetchedResultsControllerDel
         
         return _fetchedResultsController!
     }
-    var _fetchedResultsController: NSFetchedResultsController? = nil
     
-    func tableView(tableView: UITableView,
-                   editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
+    func tableView(_ tableView: UITableView,
+                   editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         return []
     }
     
-    func configureCell(cell: UITableViewCell, withObject object: NSManagedObject) {
+    func configureCell(_ cell: UITableViewCell, withObject object: NSManagedObject) {
         let match = object as! Match
         
         var winnerName =  match.winner.name
         var looserName =  match.loser.name
         let value = round(match.value).description
         
-        winnerName.replaceRange(winnerName.startIndex...winnerName.startIndex, with: String(winnerName[winnerName.startIndex]).capitalizedString)
-        looserName.replaceRange(looserName.startIndex...looserName.startIndex, with: String(looserName[looserName.startIndex]).capitalizedString)
+        winnerName.replaceSubrange(winnerName.startIndex...winnerName.startIndex, with: String(winnerName[winnerName.startIndex]).capitalized)
+        looserName.replaceSubrange(looserName.startIndex...looserName.startIndex, with: String(looserName[looserName.startIndex]).capitalized)
         
         var winText = " Won "
         winText = winText + (match.scratched ? scratchSign + " " : "")

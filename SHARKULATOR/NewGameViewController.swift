@@ -37,13 +37,13 @@ class NewGameViewController: UIViewController,UITextFieldDelegate {
     }
     
     
-    @IBAction func close(sender: AnyObject) {
-        self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+    @IBAction func close(_ sender: AnyObject) {
+        self.presentingViewController?.dismiss(animated: true, completion: nil)
     }
     
-    @IBAction func calculateClicked(sender: AnyObject) {
+    @IBAction func calculateClicked(_ sender: AnyObject) {
         
-        calculateButton.enabled = false
+        calculateButton.isEnabled = false
         
         let winnerName = self.winnerTextField.text!
         let loserName = self.loserTextField.text!
@@ -62,15 +62,15 @@ class NewGameViewController: UIViewController,UITextFieldDelegate {
         let oldLoserScore = loser.score
         
         
-        scoresBoard.addMatch(winner, loser: loser, breaker: breaker, scratch : scratchSwitch.on, titleGame: titleGameSwitch.on && titleGameSwitch.enabled, appDelegate: UIApplication.sharedApplication().delegate as! AppDelegate)
+        scoresBoard.addMatch(winner, loser: loser, breaker: breaker, scratch : scratchSwitch.isOn, titleGame: titleGameSwitch.isOn && titleGameSwitch.isEnabled, appDelegate: UIApplication.shared.delegate as! AppDelegate)
         
         winnerLabel.text = round(winner.score).description + " (" + round(winner.score - oldWinnerScore).description + ")"
         loserLabel.text = round(loser.score).description + " (" + round(loser.score - oldLoserScore).description + ")"
         
-        scoresBoard.store(UIApplication.sharedApplication().delegate as! AppDelegate)
+        scoresBoard.store(UIApplication.shared.delegate as! AppDelegate)
     }
     
-    @IBAction func nameChanged(sender: AnyObject) {
+    @IBAction func nameChanged(_ sender: AnyObject) {
         
         let winnerName = self.winnerTextField.text!
         let loserName = self.loserTextField.text!
@@ -78,43 +78,43 @@ class NewGameViewController: UIViewController,UITextFieldDelegate {
         let validWinnerName = scoresBoard.containsPlayerWithName(winnerName)
         let validLoserName = scoresBoard.containsPlayerWithName(loserName)
         
-        calculateButton.enabled = (validWinnerName && validLoserName) && winnerName != loserName
+        calculateButton.isEnabled = (validWinnerName && validLoserName) && winnerName != loserName
         
         if(validLoserName && validWinnerName){
             let winner = scoresBoard.playerWithName(winnerName)
             let loser = scoresBoard.playerWithName(loserName)
             var b1 = winner.stats.titleHolder
             var b = winner.stats.titleHolder
-            titleGameSwitch.enabled = winner.stats.titleHolder || loser.stats.titleHolder
-            titleGameLabel.alpha = titleGameSwitch.enabled ? 1 : 0.5
+            titleGameSwitch.isEnabled = winner.stats.titleHolder || loser.stats.titleHolder
+            titleGameLabel.alpha = titleGameSwitch.isEnabled ? 1 : 0.5
         }else{
-            titleGameSwitch.enabled = false
+            titleGameSwitch.isEnabled = false
             titleGameLabel.alpha = 0.5
         }
     }
     
     
-    func textFieldDidBeginEditing(textField: UITextField) {    //delegate method
+    func textFieldDidBeginEditing(_ textField: UITextField) {    //delegate method
         
     }
     
     
     
-    func textFieldShouldEndEditing(textField: UITextField) -> Bool {
+    func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
         return true
     }
     
-    func textFieldDidEndEditing(textField: UITextField){
+    func textFieldDidEndEditing(_ textField: UITextField){
         let playerName = textField.text!
         if(scoresBoard.containsPlayerWithName(playerName) && !scoresBoard.playerWithName(playerName).isRetired){
             let player = scoresBoard.playerWithName(playerName) as! Player
             
             if(textField == winnerTextField){
                 winnerLabel.text = round(player.score).description
-                breakSegmentedControl.setTitle(player.name, forSegmentAtIndex: 0)
+                breakSegmentedControl.setTitle(player.name, forSegmentAt: 0)
             }else if(textField == loserTextField){
                 loserLabel.text = round(player.score).description
-                breakSegmentedControl.setTitle(player.name, forSegmentAtIndex: 1)
+                breakSegmentedControl.setTitle(player.name, forSegmentAt: 1)
             }
         }else{
             if(textField == winnerTextField){
@@ -125,7 +125,7 @@ class NewGameViewController: UIViewController,UITextFieldDelegate {
         }
     }
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool {   //delegate method
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {   //delegate method
         textField.resignFirstResponder()
         
         return true

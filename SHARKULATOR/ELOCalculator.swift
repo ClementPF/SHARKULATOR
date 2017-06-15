@@ -10,7 +10,7 @@ import Foundation
 
 class ELOCalculator {
     
-    static func getMatchValue(winnerScore : Float,loserScore : Float) -> Float{
+    static func getMatchValue(_ winnerScore : Float,loserScore : Float) -> Float{
         let winnerOrinalScore = winnerScore
         let loserOriginalScore = loserScore
         
@@ -21,7 +21,7 @@ class ELOCalculator {
         return winnerScoreGain(winnerExpectedScore)
     }
     
-    static func calculateEloRating(inout winnerScore : Float,inout loserScore : Float){
+    static func calculateEloRating(_ winnerScore : inout Float,loserScore : inout Float){
         let winnerOrinalScore = winnerScore
         let loserOriginalScore = loserScore
         
@@ -35,26 +35,26 @@ class ELOCalculator {
         loserScore = updatedScore(loserOriginalScore, didWin: 0, expectedScore: loserExpectedScore)
     }
     
-    static private func transformedRating(score : Float) -> Float{
+    static fileprivate func transformedRating(_ score : Float) -> Float{
         return pow(10,(score/400))
     }
     
-    static private func expectedScore(ownTransformedRating : Float, OpponentTransformedRating : Float)-> Float{
+    static fileprivate func expectedScore(_ ownTransformedRating : Float, OpponentTransformedRating : Float)-> Float{
         return ownTransformedRating / (ownTransformedRating + OpponentTransformedRating)
     }
     
-    static private func thirdStep(winnerScore : Float, loserScore : Float){
+    static fileprivate func thirdStep(_ winnerScore : Float, loserScore : Float){
         
     }
     
-    static private func updatedScore(score : Float, didWin : Float, expectedScore : Float) -> Float{
+    static fileprivate func updatedScore(_ score : Float, didWin : Float, expectedScore : Float) -> Float{
         
         let result = score + kKfactor * (didWin - expectedScore)
         
         return result
     }
     
-    static private func winnerScoreGain(expectedScore : Float) -> Float{
+    static fileprivate func winnerScoreGain(_ expectedScore : Float) -> Float{
         
         let result = kKfactor * (1 - expectedScore)
         
